@@ -38,12 +38,16 @@ peg::parser! {
 
     // Date line: any text until a newline.
     rule date_line() -> String
-        = "Start: " m:$("['0'..='9']{2}") "-" d:$("['0'..='9']{2}") "-" y:$("['0'..='9']{4}") newline() { d.to_string() }
+        = "Start: "
+            m:$(['0'..='9']*<2> / expected!("Days dd"))
+        "-" d:$(['0'..='9']*<2> / expected!("Month dd"))
+        "-" y:$(['0'..='9']*<4> / expected!("Year yyyy"))
+        newline() { d.to_string() }
         / expected!("Date")
 
     // Essensplan header: the literal "## .*"
     rule essensplan_header() -> ()
-        = "## " (!"\n" [_])  newline() { () }
+        = "## " (!"|" [_])* { () }
 
     //////////////////////////////
     // Table Structure
@@ -62,7 +66,7 @@ peg::parser! {
         / expected!("header")
 
     rule header_amount() -> Option<usize>
-        = (!"(" [_])  a:amount() (!"|" [_]) { Some(a) }
+        = (!['(' | '|'] [_])*  a:amount() (!"|" [_])* { Some(a) }
         / expected!("Header with count")
 
     rule amount() -> usize
@@ -130,7 +134,7 @@ peg::parser! {
 
     // Plain text: any text that does not begin with "<br>", "#Einkauf", or "[[".
     rule plain_text() -> String
-        = s:$( (!("<br>" / "#Einkauf" / "[[") [_])+) { s.to_string() }
+        = s:$( (!("<br>" / "#Einkauf" / "[[" / "|") [_])+) { s.to_string() }
 
     //////////////////////////////
     // Markdown Text After the Table
@@ -149,6 +153,12 @@ mod tests {
     fn test_parse_table() {
         let table = include_str!("test-data/table.md");
         mdplan_parser::table(table).unwrap();
+    }
+
+    #[test]
+    fn test_parse_plan() {
+        let table = include_str!("test-data/plan.md");
+        mdplan_parser::mdplan_file(table).unwrap();
     }
 
     #[test]
