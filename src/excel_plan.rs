@@ -1,0 +1,3 @@
+struct Day {
+    dishes: Vec,
+}
