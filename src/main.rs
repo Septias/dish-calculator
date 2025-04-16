@@ -1,6 +1,3 @@
-pub mod loaders;
-pub mod types;
-
 use std::{
     collections::HashMap,
     fs,
@@ -11,14 +8,16 @@ use regex::Regex;
 
 const BASE: &str = "/home/septias/OneDrive/Life/Areas/Kochen";
 const PLAN: &str = r#"
-Freitag Abend ->  [[Schupfnudeln Gemüse]], [[Gemischter Salat]]
-Samstag Morgen -> Brot, [[EI]](4)
-Samstag Mittag -> Flammkuchen
-Samstag Abend -> [[Pilzrisotto]], [[Feldsalat mit Pilzen und Kürbiskernen]]
-Samstag Nacht -> [[Zimtschnecke]]
-Sonntag Morgen -> [[Armer Ritter]], Brot
+Do -> [[Maultaschen]], [[Kartoffel-Gurken-Salat]], [[Schmelzzwibeln]]
+Freitag -> [[Standartfrühstück]], [[Nudeln Mit Tomatensoße]], [[Blechkuchen]], [[Curry]]
+Samstag -> [[Standartfrühstück]], [[Milchreis]], [[Käsespätzle]], [[Linsendahl]]
 "#;
-const PARTICIPANTS: f32 = 8.;
+const PARTICIPANTS: f32 = 15.0;
+
+const MEASURES: [&str; 15] = [
+    "Dosen", "g", "mg", "kg", "el", "tl", "l", "ml", "Liter", "stk", "Scheiben", "scheiben",
+    "scheibe", "Pr.", "EL",
+];
 
 #[derive(Debug)]
 struct Amount {
