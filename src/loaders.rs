@@ -44,11 +44,18 @@ impl MdPlanLoader {
             .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))
             .collect::<HashMap<_, _>>();
 
-        // TODO: Load start day
-        let start = todo!();
-
-        // TODO: Load number of people
-        let people = todo!();
+        // Load the markdown plan file content
+        let file_content = std::fs::read_to_string(path)
+            .expect("Failed to read markdown plan file");
+        let mut lines = file_content.lines();
+        // The first line is the number of people
+        let people_line = lines.next().expect("Missing people count line");
+        // The second line is the start date (expects format YYYY-MM-DD)
+        let start_line = lines.next().expect("Missing start date line");
+        let people = people_line.trim().parse::<usize>()
+            .expect("Failed to parse people count");
+        let start = chrono::NaiveDate::parse_from_str(start_line.trim(), "%Y-%m-%d")
+            .expect("Failed to parse start date");
         // TODO: Iterate table and collect days one after another
         let days = vec![];
 
