@@ -1,3 +1,6 @@
+pub mod loaders;
+pub mod types;
+
 use std::{
     collections::HashMap,
     fs,
@@ -16,9 +19,6 @@ Samstag Nacht -> [[Zimtschnecke]]
 Sonntag Morgen -> [[Armer Ritter]], Brot
 "#;
 const PARTICIPANTS: f32 = 8.;
-const MEASURES: [&str; 11] = [
-    "g", "mg", "kg", "el", "tl", "l", "ml", "Liter", "Scheiben", "scheiben", "scheibe",
-];
 
 #[derive(Debug)]
 struct Amount {
