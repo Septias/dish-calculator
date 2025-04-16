@@ -1,4 +1,5 @@
 pub mod loaders;
+mod parser;
 pub mod types;
 
 use std::{
@@ -72,11 +73,7 @@ fn calculate(path: &Path, dish: &str, participants: f32) -> Vec<Amount> {
                     }
                 };
 
-                let (measure, name) = if MEASURES.contains(&parts[1]) {
-                    (parts[1].to_string(), parts[2..].join(" "))
-                } else {
-                    ("".to_string(), parts[1..].join(" "))
-                };
+                let (measure, name) = ("".to_string(), parts[1..].join(" "));
 
                 Amount {
                     amount,
