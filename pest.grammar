@@ -1,0 +1,59 @@
+
+//////////////////////
+// Pest Grammar for Markdown Meal Plan Loader
+//////////////////////
+
+// Whitespace and newline definitions.
+WHITESPACE = _{ " " | "\t" }
+NEWLINE    = _{ "\n" }
+
+// The top-level rule: a file must have a people line, a date line, an Essensplan header and a table.
+mdplan_file = { people_line ~ date_line ~ essensplan_header ~ table }
+
+// People line: e.g. "12 People"
+people_line = { number ~ WHITESPACE+ ~ "People" ~ NEWLINE }
+number      = @{ ASCII_DIGIT+ }
+
+// Date line: any non-newline text (this is where a chrono‑parsable date string is expected)
+date_line = { date_text ~ NEWLINE }
+date_text = @{ (!NEWLINE ~ ANY)+ }
+
+// Essensplan header: must match exactly "## Essensplan"
+essensplan_header = { "## Essensplan" ~ NEWLINE }
+
+// Table structure: a header row, a divider row, and one or more meal rows.
+table = { header_row ~ divider_row ~ meal_row+ }
+
+// Header row: starts with an (often empty) cell, then one or more day header cells.
+header_row = { "|" ~ header_cell ~ ("|" ~ day_header)+ ~ "|" ~ NEWLINE }
+header_cell = @{ (!"|" ~ ANY)* } 
+// Day headers expect a day name followed (optionally) by a people count in parentheses.
+day_header = { day_name ~ WHITESPACE* ~ "(" ~ WHITESPACE* ~ number ~ WHITESPACE* ~ ")" }
+day_name   = @{ (!"(" ~ ANY)+ }
+
+// Divider row: cells that typically consist of dashes (or colons for alignment) and whitespace.
+divider_row = { "|" ~ divider_cell ~ ("|" ~ divider_cell)+ ~ "|" ~ NEWLINE }
+divider_cell = @{ (WHITESPACE | "-" | ":")+ }
+
+// Meal rows: each row begins with a time cell (in bold) and then one or more day cells.
+meal_row = { "|" ~ time_cell ~ ("|" ~ day_cell)* ~ "|" ~ NEWLINE }
+time_cell = { bold }
+bold      = { "**" ~ bold_text ~ "**" }
+bold_text = @{ (!"**" ~ ANY)+ }
+
+// Day cell: may be empty or contain one or more items: a shopping marker, meal references, HTML breaks or plain text.
+day_cell = { day_cell_content? }
+day_cell_content = { (shopping | meal_ref | html_br | plain_text)+ }
+
+// The shopping marker, exactly "#Einkauf".
+shopping = { "#Einkauf" }
+
+// Meal references are enclosed in double brackets.
+meal_ref = { "[[" ~ meal_name ~ "]]" }
+meal_name = @{ (!"]]" ~ ANY)+ }
+
+// HTML line break (as seen in multi-meal cells).
+html_br = { "<br>" }
+
+// Plain text: text that does not start one of the special tokens.
+plain_text = @{ (!("<br>" | "#Einkauf" | "[[") ~ ANY)+ }
