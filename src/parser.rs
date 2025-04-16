@@ -26,21 +26,24 @@ peg::parser! {
     pub rule mdplan_file() -> ()
         = people_line() date_line() essensplan_header() table() newline() { () }
 
-    // People line, e.g. "12 People"
-    rule people_line() -> ()
-        = n:$(number_rule()) ws() "People" newline() { () }
+    // People line, e.g.
+    rule people_line() -> usize
+        = "People: " n:$(number_rule()) newline() {? n.parse().or(Err("Expected number after `People:`")) }
+        / expected!("People")
 
     // A number: one or more digits.
     rule number_rule() -> &'input str
         = n:$(['0'..='9']+) { n }
+        / expected!("Number")
 
     // Date line: any text until a newline.
     rule date_line() -> String
-        = d:$( (!newline() [_])+ ) newline() { d.to_string() }
+        = "Start: " m:$("['0'..='9']{2}") "-" d:$("['0'..='9']{2}") "-" y:$("['0'..='9']{4}") newline() { d.to_string() }
+        / expected!("Date")
 
-    // Essensplan header: the literal "## Essensplan"
+    // Essensplan header: the literal "## .*"
     rule essensplan_header() -> ()
-        = "## Essensplan" newline() { () }
+        = "## " (!"\n" [_])  newline() { () }
 
     //////////////////////////////
     // Table Structure
@@ -50,29 +53,28 @@ peg::parser! {
     pub rule table() -> ()
         = header_row() divider_row() meal_row()+ { () }
 
-    // Header row: starts with a cell then one or more day header cells.
-    pub rule header_row() -> ()
-        = "|" header_cell() ( "|" day_header() )+ "|" newline() { () }
+    pub rule header_row() -> Vec<Option<usize>>
+        =  s:(!"|\n" "|" a:header() {a})* "|\n" { (s) }
+        / expected!("header row")
 
-    // Any text until a pipe.
-    rule header_cell() -> String
-        = s:$( (!"|" [_])* ) { s.to_string() }
+    pub rule header() -> Option<usize>
+        = (a:header_amount() {a}) / (header_no_amount() { None })
+        / expected!("header")
 
-    // Day header: a day name that may optionally be followed by a people count in parentheses.
-    rule day_header() -> (String, Option<usize>)
-        = d:day_name() ws_opt() opt:(
-              "(" ws_opt() n:$(number_rule()) ws_opt() ")" { n }
-          )? {
-              (d, opt.map(|s| s.parse().unwrap()))
-          }
+    rule header_amount() -> Option<usize>
+        = (!"(" [_])  a:amount() (!"|" [_]) { Some(a) }
+        / expected!("Header with count")
 
-    // Day name: any text until an opening parenthesis.
-    rule day_name() -> String
-        = s:$( (!("(" / "|") [_])+ ) { s.to_string() }
+    rule amount() -> usize
+       = "(" n:$(number_rule()) ")" {? n.parse().or(Err("Expected positive number"))}
+
+    rule header_no_amount()
+        = (!"|" [_])+
+        / expected!("Header no count")
 
     // Divider row: each cell is made of dashes, colons, or spaces.
     rule divider_row() -> ()
-        = "|" divider_cell() ( "|" divider_cell() )+ "|" newline() { () }
+        = "|" divider_cell() ( "|" divider_cell() )+ / ("|" newline()) { () }
     rule divider_cell() -> String
         = s:$( ([' ' | '-' | ':'])+ ) { s.to_string() }
 
@@ -82,7 +84,7 @@ peg::parser! {
 
     // A meal row starts with a time cell and then zero or more day cells.
     rule meal_row() -> ()
-        = "|" time_cell() ( "|" day_cell() )* "|" newline() { () }
+        = "|" time_cell() ( "|" day_cell() )* / ("|" newline()) { () }
 
     // A time cell is either bold (wrapped in "**") or plain text.
     rule time_cell() -> String
@@ -150,8 +152,19 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_table_header() {
-        let header = "| Donnerstag | Montag |";
-        mdplan_parser::header_row(header).unwrap();
+    fn test_parse_table_header_row() {
+        let header = "| Donnerstag | Montag |\n";
+        assert_eq!(mdplan_parser::header_row(header).unwrap(), vec![None, None]);
+        let header = "| Donnerstag | Montag (12) |\n";
+        assert_eq!(
+            mdplan_parser::header_row(header).unwrap(),
+            vec![None, Some(12)]
+        );
+    }
+
+    #[test]
+    fn test_parse_table_header_cell() {
+        let header = "Montag";
+        mdplan_parser::header(header).unwrap();
     }
 }

@@ -8,3 +8,4 @@ Berechne, Skaliere und Addiere die Zutaten für einen Essensplan, um den Einkauf
 - [] Akkumulieren
 - [] PDF-Export
 - [] Vegane Optionen
+- [] Vereinfachen von Einheiten
