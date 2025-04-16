@@ -13,13 +13,18 @@ peg::parser! {
     // Newline.
     rule newline() = "\n"
 
+    // End-of-input marker.
+    rule EOI() -> ()
+        = ![_]
+
     //////////////////////////////
     // Top-level Structure
     //////////////////////////////
 
     // A complete meal plan file.
+    // It consists of: People line, date line, header, table, markdown text, then the end-of-input.
     pub rule mdplan_file() -> ()
-        = people_line() date_line() essensplan_header() table() { () }
+        = people_line() date_line() essensplan_header() table() newline() { () }
 
     // People line, e.g. "12 People"
     rule people_line() -> ()
@@ -46,24 +51,26 @@ peg::parser! {
         = header_row() divider_row() meal_row()+ { () }
 
     // Header row: starts with a cell then one or more day header cells.
-    rule header_row() -> ()
+    pub rule header_row() -> ()
         = "|" header_cell() ( "|" day_header() )+ "|" newline() { () }
+
     // Any text until a pipe.
     rule header_cell() -> String
         = s:$( (!"|" [_])* ) { s.to_string() }
 
     // Day header: a day name that may optionally be followed by a people count in parentheses.
-    rule day_header() -> (String, Option<String>)
+    rule day_header() -> (String, Option<usize>)
         = d:day_name() ws_opt() opt:(
               "(" ws_opt() n:$(number_rule()) ws_opt() ")" { n }
           )? {
-              (d, opt.map(|s| s.to_string()))
+              (d, opt.map(|s| s.parse().unwrap()))
           }
+
     // Day name: any text until an opening parenthesis.
     rule day_name() -> String
-        = s:$( (!"(" [_])+ ) { s.to_string() }
+        = s:$( (!("(" / "|") [_])+ ) { s.to_string() }
 
-    // Divider row: each cell is made of dashes, colons or spaces.
+    // Divider row: each cell is made of dashes, colons, or spaces.
     rule divider_row() -> ()
         = "|" divider_cell() ( "|" divider_cell() )+ "|" newline() { () }
     rule divider_cell() -> String
@@ -77,7 +84,7 @@ peg::parser! {
     rule meal_row() -> ()
         = "|" time_cell() ( "|" day_cell() )* "|" newline() { () }
 
-    // A time cell is either bold (enclosed in "**") or plain text.
+    // A time cell is either bold (wrapped in "**") or plain text.
     rule time_cell() -> String
         = bold() / plain_time()
 
@@ -111,6 +118,7 @@ peg::parser! {
     // Meal reference: text enclosed in "[[" and "]]".
     rule meal_ref() -> String
         = "[[" s:meal_name() "]]" { s }
+
     rule meal_name() -> String
         = s:$( (!"]]" [_])+) { s.to_string() }
 
@@ -120,7 +128,15 @@ peg::parser! {
 
     // Plain text: any text that does not begin with "<br>", "#Einkauf", or "[[".
     rule plain_text() -> String
-        = s:$((!("<br>" / "#Einkauf" / "[[") [_])+) { s.to_string() }
+        = s:$( (!("<br>" / "#Einkauf" / "[[") [_])+) { s.to_string() }
+
+    //////////////////////////////
+    // Markdown Text After the Table
+    //////////////////////////////
+
+    // Any additional markdown text until the end-of-input.
+    rule markdown_text() -> String
+        = s:$((!EOI() [_])*) { s.to_string() }
 }}
 
 #[cfg(test)]
@@ -128,8 +144,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_simple() {
+    fn test_parse_table() {
         let table = include_str!("test-data/table.md");
         mdplan_parser::table(table).unwrap();
+    }
+
+    #[test]
+    fn test_parse_table_header() {
+        let header = "| Donnerstag | Montag |";
+        mdplan_parser::header_row(header).unwrap();
     }
 }
