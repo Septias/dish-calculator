@@ -1,3 +1,5 @@
+#![allow(unreachable_code)]
+mod cli;
 pub mod loaders;
 mod parser;
 pub mod types;
@@ -8,9 +10,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use regex::Regex;
-
-/// Calculate the ingredients needed for the number of participants and dish.
+use clap::Parser;
+use cli::Cli;
 
 /// Collect all dishes recursively from the given path.
 fn collect_dishes(dishes: &mut Vec<PathBuf>, path: &Path) {
@@ -23,37 +24,20 @@ fn collect_dishes(dishes: &mut Vec<PathBuf>, path: &Path) {
 }
 
 fn main() {
-    let mut dishes = vec![];
-    let base_path = Path::new(BASE);
-    collect_dishes(&mut dishes, &base_path);
-    let dishes = dishes
-        .iter()
-        .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))
-        .collect::<HashMap<_, _>>();
+    let Cli { plan, dish_root } = Cli::parse();
 
-    // Extract needed dishes from a dish plan
-    // Format: [[<dish>]](<amount>)
-    let regex = Regex::new(r#"\[\[(?<name>.*?)\]\](\((?<num>\d+)\))?"#).unwrap();
-    let items = regex.captures_iter(PLAN).map(|c| {
-        (
-            c.name("name").unwrap().as_str(),
-            c.name("num").map(|a| a.as_str().parse::<f32>().unwrap()),
-        )
-    });
+    let available_dishes = {
+        let mut dishes = vec![];
+        let base_path = dish_root.unwrap_or(PathBuf::from("./."));
+        collect_dishes(&mut dishes, &base_path);
+        dishes
+            .iter()
+            .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))
+            .collect::<HashMap<_, _>>()
+    };
 
-    // Calculate amount of ingredients for each dish and how many participants are planned
-    let calcs = items.map(|(name, amount)| {
-        println!("Upscaling {} with {}", name, amount.unwrap_or(PARTICIPANTS));
-        let calulation = calculate(
-            dishes
-                .get(name)
-                .expect(&format!("dish {name} not in dishes"))
-                .as_path(),
-            name,
-            amount.unwrap_or(PARTICIPANTS),
-        );
-        calulation
-    });
+    let wanted_dishes = todo!();
+    let ingredients = wanted_dishes.scale();
 
     // Add all the amounts
     let accumulated_amounts = calcs
