@@ -1,14 +1,65 @@
 use std::{
+    collections::HashMap,
     fs,
     path::{Path, PathBuf},
 };
 
-use regex::Regex;
-
 type Ingredients = Vec<Ingredient>;
+struct IngredientList(Ingredients);
 
-trait IngredientAccumulator {
-    fn accumulate(&self) -> Ingredients;
+impl IngredientList {
+    /// Accumulate ingredients.
+    fn accumulate(&mut self) {
+        self.0 = self
+            .0
+            .into_iter()
+            .fold(
+                HashMap::new(),
+                |mut acc: HashMap<String, Vec<Ingredient>>, elem| {
+                    if let Some(amounts) = acc.get_mut(&elem.name) {
+                        amounts.push(elem)
+                    } else {
+                        acc.insert(elem.name, vec![elem]);
+                    }
+
+                    acc
+                },
+            )
+            .iter()
+            .collect()
+    }
+    /// Generate md shopping list.
+    pub(crate) fn as_md_list(&self) -> String {
+        let mut all = vec![];
+
+        for (name, amount) in self.0 {
+            all.push(format!(
+                "- {name} [{}] ({})",
+                amount
+                    .iter()
+                    .map(|amount| format!("{}{}", amount.amount, amount.measure))
+                    .collect::<Vec<_>>()
+                    .join(", "),
+                amount
+                    .iter()
+                    .map(|amount| amount.dish.as_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ));
+        }
+        all.sort();
+        all.join("\n")
+    }
+
+    /// Generate clustered md shopping list with AI.
+    pub(crate) fn as_clustered_md_list(&self) -> String {
+        todo!()
+    }
+}
+
+pub(crate) trait Plan {
+    /// Generate a shopping list for all dishes.
+    fn shopping_list(&self) -> IngredientList;
 }
 
 /// A single ingredient
@@ -38,8 +89,6 @@ pub(crate) struct Dish {
 }
 
 impl Dish {
-    fn new(path: &Path) {}
-
     fn accumulate(&self) -> Vec<Ingredient> {
         let file = fs::read_to_string(&self.path).unwrap();
         let start = file.find("Zutaten").unwrap();
@@ -110,8 +159,8 @@ pub(crate) struct Day {
     pub(crate) people: Option<usize>,
 }
 
-impl IngredientAccumulator for Day {
-    fn accumulate(&self) -> Ingredients {
+impl Plan for Day {
+    fn shopping_list(&self) -> Ingredients {
         todo!()
     }
 }
@@ -126,8 +175,8 @@ pub(crate) struct WeekPlan {
     pub(crate) people: usize,
 }
 
-impl IngredientAccumulator for WeekPlan {
-    fn accumulate(&self) -> Ingredients {
+impl Plan for WeekPlan {
+    fn shopping_list(&self) -> Ingredients {
         todo!()
     }
 }

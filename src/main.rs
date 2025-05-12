@@ -4,14 +4,14 @@ pub mod loaders;
 mod parser;
 pub mod types;
 
+use clap::Parser;
+use cli::Cli;
 use std::{
     collections::HashMap,
     fs,
     path::{Path, PathBuf},
 };
-
-use clap::Parser;
-use cli::Cli;
+use types::Plan;
 
 /// Collect all dishes recursively from the given path.
 fn collect_dishes(dishes: &mut Vec<PathBuf>, path: &Path) {
@@ -36,48 +36,11 @@ fn main() {
             .collect::<HashMap<_, _>>()
     };
 
-    let wanted_dishes = todo!();
-    let ingredients = wanted_dishes.scale();
-
-    // Add all the amounts
-    let accumulated_amounts = calcs
-        .map(|calc| {
-            calc.into_iter()
-                .map(|amount| (amount.name.clone(), amount))
-                .collect::<HashMap<_, _>>()
-        })
-        .fold(
-            HashMap::new(),
-            |mut acc: HashMap<String, Vec<Amount>>, elem| {
-                elem.into_iter().for_each(|(name, amount)| {
-                    if let Some(amounts) = acc.get_mut(&name) {
-                        amounts.push(amount)
-                    } else {
-                        acc.insert(name, vec![amount]);
-                    }
-                });
-                acc
-            },
-        );
-
-    // Print the ingredient list
-    let mut all = vec![];
-    for (name, amount) in accumulated_amounts {
-        all.push(format!(
-            "- {name} [{}] ({})",
-            amount
-                .iter()
-                .map(|amount| format!("{}{}", amount.amount, amount.measure))
-                .collect::<Vec<_>>()
-                .join(", "),
-            amount
-                .iter()
-                .map(|amount| amount.dish.as_str())
-                .collect::<Vec<_>>()
-                .join(", ")
-        ));
-    }
-
-    all.sort();
-    fs::write("ingredients.md", all.join("\n")).unwrap();
+    let plan = fs::read_to_string(plan.unwrap_or(PathBuf::from("./plan.md")));
+    let wanted_dishes: Box<dyn Plan> = todo!();
+    let ingredients = wanted_dishes.shopping_list();
+    let simple = ingredients.as_md_list();
+    fs::write("./list.md", &simple);
+    let clustered = ingredients.as_clustered_md_list();
+    fs::write("./list_clustered.md", &clustered);
 }
