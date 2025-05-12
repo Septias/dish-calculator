@@ -1,5 +1,5 @@
 {
-  description = "Application to set wallpapers from reddit as desktop-background";
+  description = "Plan dishes";
   inputs = {
     os_flake.url = "github:septias/nixos-config";
     nixpkgs.follows = "os_flake/nixpkgs";

@@ -9,6 +9,7 @@ edition = "2021"
 anyhow = "*"
 thiserror = "*"
 nom = "8.0.0"
-markdown = "1.0.0-alpha.23"
 chrono = "0.4.39"
 clap = { version="4.5.37", features = ["derive"]}
+markdown = "1.0.0"
+markdown2pdf = "*"
