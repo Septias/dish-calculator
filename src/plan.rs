@@ -3,8 +3,42 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{collect_dishes, types::WeekPlan};
+use crate::{collect_dishes, dish::Dish, types::IngredientList};
 
+pub(crate) trait Plan {
+    /// Generate a shopping list for all dishes.
+    fn shopping_list(&self) -> IngredientList;
+}
+
+/// A single day with multiple dishes.
+pub(crate) struct Day {
+    /// List of dishes.
+    pub(crate) dishes: Vec<Dish>,
+    /// The amount of people to feed.
+    pub(crate) people: Option<usize>,
+}
+
+impl Plan for Day {
+    fn shopping_list(&self) -> IngredientList {
+        todo!()
+    }
+}
+
+/// The week structure of a meal plan.
+pub(crate) struct WeekPlan {
+    /// Start date used for PDF export.
+    pub(crate) start: chrono::NaiveDate,
+    /// Consecutive list of days.
+    pub(crate) days: Vec<Day>,
+    /// The amount of people to feed.
+    pub(crate) people: usize,
+}
+
+impl Plan for WeekPlan {
+    fn shopping_list(&self) -> IngredientList {
+        todo!()
+    }
+}
 const MEASURES: [&str; 11] = [
     "g", "mg", "kg", "el", "tl", "l", "ml", "Liter", "Scheiben", "scheiben", "scheibe",
 ];
@@ -72,18 +106,7 @@ impl MdPlanLoader {
 struct ListPlanLoader {}
 
 impl ListPlanLoader {
-    fn load(path: &Path) -> Self {}
+    fn load(path: &Path) -> Self {
+        todo!()
+    }
 }
-
-struct DishLoader {
-    /// Path of the `dish.md`
-    file: Path,
-}
-
-impl DishLoader {
-    fn load() {}
-}
-
-struct ListIngredientsLoader {}
-
-struct TableIngrediensLoader {}

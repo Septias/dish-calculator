@@ -1,17 +1,18 @@
 #![allow(unreachable_code)]
 mod cli;
-pub mod loaders;
-mod parser;
-pub mod types;
+mod dish;
+mod loaders;
+mod plan;
+mod types;
 
 use clap::Parser;
 use cli::Cli;
+use plan::Plan;
 use std::{
     collections::HashMap,
     fs,
     path::{Path, PathBuf},
 };
-use types::Plan;
 
 /// Collect all dishes recursively from the given path.
 fn collect_dishes(dishes: &mut Vec<PathBuf>, path: &Path) {
