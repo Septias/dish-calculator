@@ -3,8 +3,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::{collect_dishes, dish::Dish, types::IngredientList};
+use markdown::ParseOptions;
 
+use crate::{collect_dishes, dish::Dish, types::IngredientList, DishPlanError};
 pub(crate) trait Plan {
     /// Generate a shopping list for all dishes.
     fn shopping_list(&self) -> IngredientList;
@@ -70,18 +71,9 @@ struct MdPlanLoader {
 }
 
 impl MdPlanLoader {
-    fn load(path: &Path, base_path: &Path) -> WeekPlan {
-        let mut dishes = vec![];
-        collect_dishes(&mut dishes, &base_path);
-        let dishes = dishes
-            .iter()
-            .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))
-            .collect::<HashMap<_, _>>();
-
-        // Load the markdown plan file content
-        let file_content =
-            std::fs::read_to_string(path).expect("Failed to read markdown plan file");
-        let mut lines = file_content.lines();
+    fn load<T: Plan>(content: String) -> Result<Box<dyn Plan>, DishPlanError> {
+        let md = markdown::to_mdast(&content, &ParseOptions::default())
+            .map_err(|e| DishPlanError::MarkdownError)?;
         // The first line is the number of people
         let people_line = lines.next().expect("Missing people count line");
         // The second line is the start date (expects format YYYY-MM-DD)
@@ -95,11 +87,11 @@ impl MdPlanLoader {
         // TODO: Iterate table and collect days one after another
         let days = vec![];
 
-        WeekPlan {
+        Ok(Box::new(WeekPlan {
             start,
             days,
             people,
-        }
+        }))
     }
 }
 

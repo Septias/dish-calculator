@@ -1,12 +1,13 @@
 #![allow(unreachable_code)]
 mod cli;
 mod dish;
-mod loaders;
+mod error;
 mod plan;
 mod types;
 
 use clap::Parser;
 use cli::Cli;
+use error::DishPlanError;
 use plan::Plan;
 use std::{
     collections::HashMap,
@@ -37,7 +38,9 @@ fn main() {
             .collect::<HashMap<_, _>>()
     };
 
-    let plan = fs::read_to_string(plan.unwrap_or(PathBuf::from("./plan.md")));
+    let plan = fs::read_to_string(plan.unwrap_or(PathBuf::from("./plan.md")))
+        .map_err(|_e| DishPlanError::PlanDoesNotExist)
+        .unwrap();
     let wanted_dishes: Box<dyn Plan> = todo!();
     let ingredients = wanted_dishes.shopping_list();
     let simple = ingredients.as_md_list();
