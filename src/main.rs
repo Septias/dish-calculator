@@ -6,17 +6,38 @@ use std::{
 
 use regex::Regex;
 
-const BASE: &str = "/home/septias/OneDrive/Life/Areas/Kochen";
+const BASE: &str = "/home/septias/life/Areas/Kochen";
 const PLAN: &str = r#"
-Do -> [[Maultaschen]], [[Kartoffel-Gurken-Salat]], [[Schmelzzwibeln]]
-Freitag -> [[Standartfrühstück]], [[Nudeln Mit Tomatensoße]], [[Blechkuchen]], [[Curry]]
-Samstag -> [[Standartfrühstück]], [[Milchreis]], [[Käsespätzle]], [[Linsendahl]]
-"#;
-const PARTICIPANTS: f32 = 15.0;
+- [[Linsendahl]]
+	- [[Naan-Brot]](18)
+	- [[Naan-Brot2]](2)
 
-const MEASURES: [&str; 15] = [
+## Samstag
+- [[Standartfrühstück]](18)
+	- [[Rustikales]]
+	- Baked beans
+	- [[Tofu Rührei]](8)
+	- [[Guacamole]](8)
+- [[Reis Bowl]]tt
+	- [[Sticky Tofu]](4)
+	- [[Gebratene Auberginen]](4)
+	- [[Brokkoli im Teigmantel]](4)
+- [[Erdnusssauce]](10)
+	- [[Avocado Cashew Dressing]](10)
+- [[Kürbis Gnocci]]
+	- [[Butter Salbei]]
+	- [[Gurkensalat]](10)
+	- [[Gemischter Salat]](10)
+
+## Sonntag
+- [[Kaiserschmarn]]
+- [[Pizzaschnecken]]
+"#;
+const PARTICIPANTS: f32 = 20.0;
+
+const MEASURES: [&str; 16] = [
     "Dosen", "g", "mg", "kg", "el", "tl", "l", "ml", "Liter", "stk", "Scheiben", "scheiben",
-    "scheibe", "Pr.", "EL",
+    "scheibe", "Pr.", "EL", "TL",
 ];
 
 #[derive(Debug)]
@@ -30,7 +51,7 @@ struct Amount {
 /// Calculate the ingredients needed for the number of participants and dish.
 fn calculate(path: &Path, dish: &str, participants: f32) -> Vec<Amount> {
     let file = fs::read_to_string(path).unwrap();
-    let start = file.find("Zutaten").unwrap();
+    let start = file.find("Zutaten").expect("Didn't find header »Zutaten«");
     let end = start + file[start..].find("#").unwrap_or(file.len() - start);
 
     let bulletpoint_regex = Regex::new("-(?<ingredient>.+)").unwrap();
@@ -67,6 +88,7 @@ fn calculate(path: &Path, dish: &str, participants: f32) -> Vec<Amount> {
                     Ok(amount) => amount,
                     Err(_) => {
                         println!("couldn't parse unit {}, defaulting to 0", parts[0]);
+                        println!("parts: {parts:?}");
                         0.0
                     }
                 };
@@ -107,6 +129,7 @@ fn main() {
     let mut dishes = vec![];
     let base_path = Path::new(BASE);
     collect_dishes(&mut dishes, &base_path);
+    println!("collected {} dishes", dishes.len());
     let dishes = dishes
         .iter()
         .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))

@@ -1,6 +1,5 @@
 target
 *.txt
-*.md
 .direnv/bin/nix-direnv-reload
 .direnv
 .aider*
