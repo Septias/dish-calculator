@@ -270,7 +270,7 @@ fn main() {
     }
     fs::write("./full.md", pdf).unwrap();
     Command::new("md2pdf")
-        .arg("--css ")
+        .arg("--css")
         .arg("css.css")
         .arg("full.md")
         .arg("plan.md")
