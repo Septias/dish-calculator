@@ -2,12 +2,15 @@ use std::{
     collections::HashMap,
     fs,
     path::{Path, PathBuf},
+    process::Command,
 };
 
 use regex::Regex;
 
 const BASE: &str = "/home/septias/life/Areas/Kochen";
 const PLAN: &str = r#"
+# GG Essensplan
+## Freitag
 - [[Linsendahl]]
 	- [[Naan-Brot]](18)
 	- [[Naan-Brot2]](2)
@@ -18,21 +21,20 @@ const PLAN: &str = r#"
 	- Baked beans
 	- [[Tofu Rührei]](8)
 	- [[Guacamole]](8)
-- [[Reis Bowl]]tt
-	- [[Sticky Tofu]](4)
-	- [[Gebratene Auberginen]](4)
+- [[Reis Bowl]]
+	- [[Sticky Tofu]](4) SOJA!
+	- [[Gebratene Auberginen]](4) SOJA!
 	- [[Brokkoli im Teigmantel]](4)
-- [[Erdnusssauce]](10)
+- [[Erdnusssauce]](10) SOJA!
 	- [[Avocado Cashew Dressing]](10)
 - [[Kürbis Gnocci]]
-	- [[Butter Salbei]]
 	- [[Gurkensalat]](10)
 	- [[Gemischter Salat]](10)
 
 ## Sonntag
-- [[Kaiserschmarn]]
-- [[Pizzaschnecken]]
-"#;
+- [[Kaiserschmarn]](18)
+- [[Kaiserschmarn(Vegan)]](2)
+- [[Pizzaschnecken]]"#;
 const PARTICIPANTS: f32 = 20.0;
 
 const MEASURES: [&str; 16] = [
@@ -40,7 +42,7 @@ const MEASURES: [&str; 16] = [
     "scheibe", "Pr.", "EL", "TL",
 ];
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Amount {
     amount: f32,
     measure: String,
@@ -49,7 +51,7 @@ struct Amount {
 }
 
 /// Calculate the ingredients needed for the number of participants and dish.
-fn calculate(path: &Path, dish: &str, participants: f32) -> Vec<Amount> {
+fn calculate(path: &Path, dish: &str, participants: f32) -> (Vec<Amount>, Option<String>) {
     let file = fs::read_to_string(path).unwrap();
     let start = file.find("Zutaten").expect("Didn't find header »Zutaten«");
     let end = start + file[start..].find("#").unwrap_or(file.len() - start);
@@ -66,8 +68,10 @@ fn calculate(path: &Path, dish: &str, participants: f32) -> Vec<Amount> {
         .parse::<usize>()
         .expect("Can't pares participants");
 
+    let zubereitung = file.find("## Zubereitung");
+
     let upscale = participants / dish_participants as f32;
-    bulletpoint_regex
+    let amounts = bulletpoint_regex
         .captures_iter(&file[start..end])
         .map(|capture| {
             let ingredient = capture.name("ingredient").unwrap().as_str().trim();
@@ -112,7 +116,11 @@ fn calculate(path: &Path, dish: &str, participants: f32) -> Vec<Amount> {
             amount: amount.amount * upscale,
             ..amount
         })
-        .collect()
+        .collect();
+
+    let zubereitung =
+        zubereitung.map(|start| file[(start + "## Zubereitung".len())..file.len() - 1].to_string());
+    (amounts, zubereitung)
 }
 
 /// Collect all dishes recursively from the given path.
@@ -130,37 +138,45 @@ fn main() {
     let base_path = Path::new(BASE);
     collect_dishes(&mut dishes, &base_path);
     println!("collected {} dishes", dishes.len());
-    let dishes = dishes
+    let dishbase = dishes
         .iter()
         .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))
         .collect::<HashMap<_, _>>();
 
-    // Extract needed dishes from a dish plan
+    // Extract dishes from a dish plan
     // Format: [[<dish>]](<amount>)
     let regex = Regex::new(r#"\[\[(?<name>.*?)\]\](\((?<num>\d+)\))?"#).unwrap();
-    let items = regex.captures_iter(PLAN).map(|c| {
-        (
-            c.name("name").unwrap().as_str(),
-            c.name("num").map(|a| a.as_str().parse::<f32>().unwrap()),
-        )
-    });
+    let dishes = regex
+        .captures_iter(PLAN)
+        .map(|c| {
+            (
+                c.name("name").unwrap().as_str(),
+                c.name("num").map(|a| a.as_str().parse::<f32>().unwrap()),
+            )
+        })
+        .collect::<Vec<_>>();
 
     // Calculate amount of ingredients for each dish and how many participants are planned
-    let calcs = items.map(|(name, amount)| {
-        println!("Upscaling {} with {}", name, amount.unwrap_or(PARTICIPANTS));
-        let calulation = calculate(
-            dishes
-                .get(name)
-                .expect(&format!("dish {name} not in dishes"))
-                .as_path(),
-            name,
-            amount.unwrap_or(PARTICIPANTS),
-        );
-        calulation
-    });
+    let (calcs, rest): (Vec<_>, Vec<_>) = dishes
+        .clone()
+        .into_iter()
+        .map(|(dish, participants)| {
+            let participants = participants.unwrap_or(PARTICIPANTS);
+            println!("Upscaling {dish} with {participants}");
+            calculate(
+                dishbase
+                    .get(dish)
+                    .expect(&format!("Dish {dish} not in dishes."))
+                    .as_path(),
+                dish,
+                participants,
+            )
+        })
+        .unzip();
 
     // Add all the amounts
     let accumulated_amounts = calcs
+        .iter()
         .map(|calc| {
             calc.into_iter()
                 .map(|amount| (amount.name.clone(), amount))
@@ -171,9 +187,9 @@ fn main() {
             |mut acc: HashMap<String, Vec<Amount>>, elem| {
                 elem.into_iter().for_each(|(name, amount)| {
                     if let Some(amounts) = acc.get_mut(&name) {
-                        amounts.push(amount)
+                        amounts.push(amount.clone())
                     } else {
-                        acc.insert(name, vec![amount]);
+                        acc.insert(name, vec![amount.clone()]);
                     }
                 });
                 acc
@@ -199,5 +215,65 @@ fn main() {
     }
 
     all.sort();
-    fs::write("ingredients.md", all.join("\n")).unwrap();
+    let shopping_list = all.join("\n");
+    fs::write("ingredients.md", &shopping_list).unwrap();
+
+    // Write scaled up lists.
+    fs::remove_dir("./scaled").ok();
+    fs::create_dir("./scaled").ok();
+
+    let mut amounts = calcs.into_iter();
+    let mut rests = rest.into_iter();
+
+    let mut pdf = format!(
+        r##"
+{PLAN}
+
+<div style="page-break-after: always;"></div>
+
+## Shopping List
+{shopping_list}"##
+    );
+
+    for (dish, amount) in dishes {
+        let amount = amount.unwrap_or(PARTICIPANTS);
+        let ingredients = amounts
+            .next()
+            .unwrap()
+            .into_iter()
+            .map(
+                |Amount {
+                     amount,
+                     measure,
+                     name,
+                     dish,
+                 }| format!("- {amount} {measure} {name}"),
+            )
+            .collect::<Vec<_>>()
+            .join("\n");
+        let rest = rests.next().unwrap().unwrap_or("JUST DO IT".to_string());
+        let file = format!(
+            r####"
+<div style="page-break-after: always;"></div>
+## {dish}
+{amount} Persons
+
+## Zutaten
+{ingredients}
+
+## Zubereitung
+{rest}
+
+"####
+        );
+        pdf.push_str(&file);
+    }
+    fs::write("./full.md", pdf).unwrap();
+    Command::new("md2pdf")
+        .arg("--css ")
+        .arg("css.css")
+        .arg("full.md")
+        .arg("plan.md")
+        .status()
+        .unwrap();
 }
