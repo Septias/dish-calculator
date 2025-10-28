@@ -25,7 +25,7 @@
         in {
           formatter = pkgs.alejandra;
           devShells.default = pkgs.mkShell {
-            buildInputs = [rust-toolchain];
+            buildInputs = (with pkgs; [openssl md2pdf pkg-config]) ++ [rust-toolchain];
           };
         }
       );

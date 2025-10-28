@@ -13,3 +13,5 @@ chrono = "0.4.39"
 clap = { version="4.5.37", features = ["derive"]}
 markdown = "1.0.0"
 markdown2pdf = "*"
+tokio = { version="*", features = ["fs", "macros", "rt-multi-thread"]}
+futures = "*"
