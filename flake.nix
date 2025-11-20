@@ -1,32 +1,66 @@
 {
-  description = "Plan dishes";
+  description = "A Nix-flake-based Rust development environment";
+
   inputs = {
-    os_flake.url = "github:septias/nixos-config";
-    nixpkgs.follows = "os_flake/nixpkgs";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # unstable Nixpkgs
+    fenix = {
+      url = "https://flakehub.com/f/nix-community/fenix/0.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
-    naersk.url = "github:nix-community/naersk";
   };
-  outputs = inputs:
-    with inputs;
-      flake-utils.lib.eachDefaultSystem (
-        system: let
-          pkgs = import nixpkgs {
-            overlays = [(import rust-overlay)];
-            inherit system;
-          };
-          rust-toolchain = pkgs.rust-bin.stable.latest.default.override {
-            extensions = ["rust-src" "rustfmt" "rust-docs" "clippy" "rust-analyzer"];
-          };
-        in {
-          formatter = pkgs.alejandra;
-          devShells.default = pkgs.mkShell {
-            buildInputs = (with pkgs; [openssl md2pdf pkg-config]) ++ [rust-toolchain];
-          };
-        }
+
+  outputs = {self, ...} @ inputs: let
+    supportedSystems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
+    forEachSupportedSystem = f:
+      inputs.nixpkgs.lib.genAttrs supportedSystems (
+        system:
+          f {
+            pkgs = import inputs.nixpkgs {
+              inherit system;
+              overlays = [
+                inputs.self.overlays.default
+              ];
+            };
+          }
       );
+  in {
+    overlays.default = final: prev: {
+      rustToolchain = with inputs.fenix.packages.${prev.stdenv.hostPlatform.system};
+        combine (
+          with stable; [
+            clippy
+            rustc
+            cargo
+            rustfmt
+            rust-src
+          ]
+        );
+    };
+
+    devShells = forEachSupportedSystem (
+      {pkgs}: {
+        default = pkgs.mkShellNoCC {
+          packages = with pkgs; [
+            rustToolchain
+            openssl
+            pkg-config
+            cargo-deny
+            cargo-edit
+            cargo-watch
+            rust-analyzer
+          ];
+
+          env = {
+            # Required by rust-analyzer
+            RUST_SRC_PATH = "${pkgs.rustToolchain}/lib/rustlib/src/rust/library";
+          };
+        };
+      }
+    );
+  };
 }
