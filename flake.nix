@@ -52,6 +52,7 @@
             cargo-deny
             cargo-edit
             cargo-watch
+            gcc
             rust-analyzer
           ];
 
