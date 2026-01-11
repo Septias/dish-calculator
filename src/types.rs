@@ -19,27 +19,28 @@ pub(crate) struct IngredientList(Ingredients);
 impl IngredientList {
     /// Accumulate ingredients.
     fn accumulate(&mut self) {
-        self.0 = self
-            .0
-            .into_iter()
-            .fold(
-                HashMap::new(),
-                |mut acc: HashMap<String, Vec<Ingredient>>, elem| {
-                    if let Some(amounts) = acc.get_mut(&elem.name) {
-                        amounts.push(elem)
-                    } else {
-                        acc.insert(elem.name, vec![elem]);
-                    }
+        /* self.0 = self
+        .0
+        .into_iter()
+        .fold(
+            HashMap::new(),
+            |mut acc: HashMap<String, Vec<Ingredient>>, elem| {
+                if let Some(amounts) = acc.get_mut(&elem.name) {
+                    amounts.push(elem)
+                } else {
+                    acc.insert(elem.name, vec![elem]);
+                }
 
-                    acc
-                },
-            )
-            .iter()
-            .collect()
+                acc
+            },
+        )
+        .iter()
+        .collect() */
+        todo!()
     }
     /// Generate md shopping list.
     pub(crate) fn as_md_list(&self) -> String {
-        let mut all = vec![];
+        /* let mut all = vec![];
 
         for (name, amount) in self.0 {
             all.push(format!(
@@ -57,7 +58,8 @@ impl IngredientList {
             ));
         }
         all.sort();
-        all.join("\n")
+        all.join("\n") */
+        todo!()
     }
 
     /// Generate clustered md shopping list with AI.

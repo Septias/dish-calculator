@@ -2,6 +2,10 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub(crate) enum DishPlanError {
+    #[error("Error during IO")]
+    #[from(std::io::Error)]
+    IoError,
+
     #[error("The plan does not exist at the given location.")]
     #[from(tokio::fs::Error)]
     PlanDoesNotExist,

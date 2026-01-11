@@ -40,6 +40,7 @@ impl Plan for WeekPlan {
         todo!()
     }
 }
+
 const MEASURES: [&str; 11] = [
     "g", "mg", "kg", "el", "tl", "l", "ml", "Liter", "Scheiben", "scheiben", "scheibe",
 ];
@@ -75,23 +76,24 @@ impl MdPlanLoader {
         let md = markdown::to_mdast(&content, &ParseOptions::default())
             .map_err(|e| DishPlanError::MarkdownError)?;
         // The first line is the number of people
-        let people_line = lines.next().expect("Missing people count line");
-        // The second line is the start date (expects format YYYY-MM-DD)
-        let start_line = lines.next().expect("Missing start date line");
-        let people = people_line
-            .trim()
-            .parse::<usize>()
-            .expect("Failed to parse people count");
-        let start = chrono::NaiveDate::parse_from_str(start_line.trim(), "%Y-%m-%d")
-            .expect("Failed to parse start date");
-        // TODO: Iterate table and collect days one after another
-        let days = vec![];
+        // let people_line = lines.next().expect("Missing people count line");
+        // // The second line is the start date (expects format YYYY-MM-DD)
+        // let start_line = lines.next().expect("Missing start date line");
+        // let people = people_line
+        //     .trim()
+        //     .parse::<usize>()
+        //     .expect("Failed to parse people count");
+        // let start = chrono::NaiveDate::parse_from_str(start_line.trim(), "%Y-%m-%d")
+        //     .expect("Failed to parse start date");
+        // // TODO: Iterate table and collect days one after another
+        // let days = vec![];
 
-        Ok(Box::new(WeekPlan {
-            start,
-            days,
-            people,
-        }))
+        // Ok(Box::new(WeekPlan {
+        //     start,
+        //     days,
+        //     people,
+        // }))
+        todo!()
     }
 }
 
