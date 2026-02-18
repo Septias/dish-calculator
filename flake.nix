@@ -54,6 +54,7 @@
             cargo-watch
             gcc
             rust-analyzer
+            tree-sitter
           ];
 
           env = {
