@@ -1,0 +1,255 @@
+[
+  {
+    "type": "day_line",
+    "named": true,
+    "fields": {
+      "day": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "day_with_count",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "menu",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "day_with_count",
+    "named": true,
+    "fields": {
+      "count": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "count",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "day_name",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "dish",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "dish_with_count",
+    "named": true,
+    "fields": {
+      "count": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "count",
+            "named": true
+          }
+        ]
+      },
+      "dish": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "dish",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "menu",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "menu_items",
+          "named": true
+        },
+        {
+          "type": "rest_day",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "menu_item",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "dish_with_count",
+          "named": true
+        },
+        {
+          "type": "shopping_marker",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "menu_items",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "menu_item",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "persons_line",
+    "named": true,
+    "fields": {
+      "count": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "integer",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "shopping_marker",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "day_line",
+          "named": true
+        },
+        {
+          "type": "persons_line",
+          "named": true
+        },
+        {
+          "type": "starttag_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "starttag_line",
+    "named": true,
+    "fields": {
+      "date": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "date",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "\n",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": ":",
+    "named": false
+  },
+  {
+    "type": "Personen:",
+    "named": false
+  },
+  {
+    "type": "Starttag:",
+    "named": false
+  },
+  {
+    "type": "[[",
+    "named": false
+  },
+  {
+    "type": "]]",
+    "named": false
+  },
+  {
+    "type": "count",
+    "named": true
+  },
+  {
+    "type": "date",
+    "named": true
+  },
+  {
+    "type": "day_name",
+    "named": true
+  },
+  {
+    "type": "integer",
+    "named": true
+  },
+  {
+    "type": "rest_day",
+    "named": true
+  },
+  {
+    "type": "⟨",
+    "named": false
+  },
+  {
+    "type": "⟩",
+    "named": false
+  }
+]
