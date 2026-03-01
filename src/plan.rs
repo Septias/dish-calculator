@@ -1,5 +1,6 @@
 use std::{
     collections::HashMap,
+    fs,
     path::{Path, PathBuf},
 };
 
@@ -9,6 +10,7 @@ use crate::{collect_dishes, dish::Dish, types::IngredientList, DishPlanError};
 pub(crate) trait Plan {
     /// Generate a shopping list for all dishes.
     fn shopping_list(&self) -> IngredientList;
+    fn from_file(path: &Path) -> Self;
 }
 
 /// A single day with multiple dishes.
@@ -22,6 +24,12 @@ pub(crate) struct Day {
 impl Plan for Day {
     fn shopping_list(&self) -> IngredientList {
         todo!()
+    }
+
+    fn from_file(path: &Path) -> Self {
+        fs::read_to_string(plan.unwrap_or(PathBuf::from("./plan.md")))
+            .map_err(|_e| DishPlanError::PlanDoesNotExist)
+            .unwrap();
     }
 }
 
@@ -37,6 +45,10 @@ pub(crate) struct WeekPlan {
 
 impl Plan for WeekPlan {
     fn shopping_list(&self) -> IngredientList {
+        todo!()
+    }
+
+    fn from_file(path: &Path) -> Self {
         todo!()
     }
 }

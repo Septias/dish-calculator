@@ -1,5 +1,6 @@
 #![allow(unreachable_code)]
 mod cli;
+mod cookbook;
 mod dish;
 mod error;
 mod plan;
@@ -15,6 +16,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use crate::{cookbook::CookBook, plan::WeekPlan};
+
 /// Collect all dishes recursively from the given path.
 fn collect_dishes(dishes: &mut Vec<PathBuf>, path: &Path) {
     if path.is_dir() {
@@ -28,23 +31,12 @@ fn collect_dishes(dishes: &mut Vec<PathBuf>, path: &Path) {
 fn main() {
     let Cli { plan, dish_root } = Cli::parse();
 
-    let available_dishes = {
-        let mut dishes = vec![];
-        let base_path = dish_root.unwrap_or(PathBuf::from("./."));
-        collect_dishes(&mut dishes, &base_path);
-        dishes
-            .iter()
-            .map(|path| (path.file_stem().unwrap().to_str().unwrap(), path))
-            .collect::<HashMap<_, _>>()
-    };
+    let cookbook = CookBook::from_file(&dish_root);
+    let plan = WeekPlan::from_file(&plan);
 
-    let plan = fs::read_to_string(plan.unwrap_or(PathBuf::from("./plan.md")))
-        .map_err(|_e| DishPlanError::PlanDoesNotExist)
-        .unwrap();
-    let wanted_dishes: Box<dyn Plan> = todo!();
-    let ingredients = wanted_dishes.shopping_list();
-    let simple = ingredients.as_md_list();
-    fs::write("./list.md", &simple);
-    let clustered = ingredients.as_clustered_md_list();
-    fs::write("./list_clustered.md", &clustered);
+    let shopping_list = plan.shopping_list();
+    let simple = shopping_list.as_md_list();
+    fs::write("./shopping-list.md", &simple);
+    let clustered = shopping_list.as_clustered_md_list();
+    fs::write("./shopping-list-clustered.md", &clustered);
 }
