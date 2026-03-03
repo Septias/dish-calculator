@@ -75,7 +75,7 @@ module.exports = grammar({
     menu_items: $ =>
       seq(
         $.menu_item,
-        repeat(seq(",", $.menu_item))
+        repeat(choice(seq(",", $.menu_item), $.menu_item))
       ),
 
     menu_item: $ =>
