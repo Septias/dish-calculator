@@ -8,10 +8,12 @@ edition = "2021"
 [dependencies]
 anyhow = "*"
 thiserror = "*"
-nom = "8.0.0"
 chrono = "0.4.39"
 clap = { version="4.5.37", features = ["derive"]}
 markdown = "1.0.0"
 markdown2pdf = "*"
 tokio = { version="*", features = ["fs", "macros", "rt-multi-thread"]}
 futures = "*"
+tree-sitter = "0.25"
+tree-sitter-menu = { path = "./tree-sitter" }
+regex = "1"
