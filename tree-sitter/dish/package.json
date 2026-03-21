@@ -1,0 +1,14 @@
+{
+  "name": "tree-sitter-dish",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tree-sitter grammar for dish recipes",
+  "keywords": [
+    "tree-sitter",
+    "grammar",
+    "dish",
+    "recipes"
+  ],
+  "license": "MIT",
+  "tree-sitter": "grammar.js"
+}

@@ -1,0 +1,211 @@
+[
+  {
+    "type": "ingredient_line",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ingredient_name",
+            "named": true
+          }
+        ]
+      },
+      "quantity": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "quantity",
+            "named": true
+          }
+        ]
+      },
+      "unit": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "unit",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "ingredient_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "ingredients_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ingredient_line",
+          "named": true
+        },
+        {
+          "type": "ingredients_header",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "persons_line",
+    "named": true,
+    "fields": {
+      "count": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "integer",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "preparation_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "preparation_header",
+          "named": true
+        },
+        {
+          "type": "step_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "quantity",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "float",
+          "named": true
+        },
+        {
+          "type": "integer",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ingredients_section",
+          "named": true
+        },
+        {
+          "type": "persons_line",
+          "named": true
+        },
+        {
+          "type": "preparation_section",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "step_line",
+    "named": true,
+    "fields": {
+      "number": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "integer",
+            "named": true
+          }
+        ]
+      },
+      "text": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "text",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "\n",
+    "named": false
+  },
+  {
+    "type": " ",
+    "named": false
+  },
+  {
+    "type": " Personen",
+    "named": false
+  },
+  {
+    "type": "- ",
+    "named": false
+  },
+  {
+    "type": ". ",
+    "named": false
+  },
+  {
+    "type": "float",
+    "named": true
+  },
+  {
+    "type": "ingredients_header",
+    "named": true
+  },
+  {
+    "type": "integer",
+    "named": true
+  },
+  {
+    "type": "preparation_header",
+    "named": true
+  },
+  {
+    "type": "unit",
+    "named": true
+  }
+]

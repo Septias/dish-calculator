@@ -1,0 +1,249 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "dish",
+  "rules": {
+    "source_file": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "STRING",
+            "value": "\n"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "persons_line"
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "STRING",
+            "value": "\n"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ingredients_section"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "STRING",
+            "value": "\n"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "preparation_section"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "STRING",
+            "value": "\n"
+          }
+        }
+      ]
+    },
+    "persons_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "count",
+          "content": {
+            "type": "SYMBOL",
+            "name": "integer"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": " Personen"
+        }
+      ]
+    },
+    "ingredients_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "ingredients_header"
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "ingredient_line"
+              },
+              {
+                "type": "STRING",
+                "value": "\n"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "ingredients_header": {
+      "type": "STRING",
+      "value": "## Zutaten"
+    },
+    "ingredient_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "- "
+        },
+        {
+          "type": "FIELD",
+          "name": "quantity",
+          "content": {
+            "type": "SYMBOL",
+            "name": "quantity"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": " "
+        },
+        {
+          "type": "FIELD",
+          "name": "unit",
+          "content": {
+            "type": "SYMBOL",
+            "name": "unit"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": " "
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ingredient_name"
+          }
+        }
+      ]
+    },
+    "preparation_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "preparation_header"
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "step_line"
+              },
+              {
+                "type": "STRING",
+                "value": "\n"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "preparation_header": {
+      "type": "STRING",
+      "value": "## Zubereitung"
+    },
+    "step_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "number",
+          "content": {
+            "type": "SYMBOL",
+            "name": "integer"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ". "
+        },
+        {
+          "type": "FIELD",
+          "name": "text",
+          "content": {
+            "type": "SYMBOL",
+            "name": "text"
+          }
+        }
+      ]
+    },
+    "quantity": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "float"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        }
+      ]
+    },
+    "integer": {
+      "type": "PATTERN",
+      "value": "\\d+"
+    },
+    "float": {
+      "type": "PATTERN",
+      "value": "\\d+\\.\\d+"
+    },
+    "unit": {
+      "type": "PATTERN",
+      "value": "[^\\s]+"
+    },
+    "ingredient_name": {
+      "type": "PATTERN",
+      "value": "[^\\n]*"
+    },
+    "text": {
+      "type": "PATTERN",
+      "value": "[^\\n]*"
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "[\\t ]"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}
