@@ -2,7 +2,7 @@ module.exports = grammar({
   name: "dish",
 
   // Keep newlines significant; ignore only spaces and tabs
-  extras: $ => [/[\t ]/],
+  extras: $ => [/[\t ]+/],
 
   rules: {
 
@@ -18,7 +18,12 @@ module.exports = grammar({
         repeat("\n")
       ),
 
-    persons_line: $ => seq(field("count", $.integer), " Personen"),
+    persons_line: $ =>
+      seq(
+        field("count", $.integer),
+        /[\t ]+/,
+        choice("Personen", "Portionen", "Portion")
+      ),
 
     ingredients_section: $ =>
       seq($.ingredients_header, "\n", repeat(seq($.ingredient_line, "\n"))),
@@ -27,11 +32,12 @@ module.exports = grammar({
 
     ingredient_line: $ =>
       seq(
-        "- ",
+        "-",
+        /[\t ]+/,
         field("quantity", $.quantity),
-        " ",
+        /[\t ]+/,
         field("unit", $.unit),
-        " ",
+        /[\t ]+/,
         field("name", $.ingredient_name)
       ),
 

@@ -173,19 +173,23 @@
     "named": false
   },
   {
-    "type": " ",
-    "named": false
-  },
-  {
-    "type": " Personen",
-    "named": false
-  },
-  {
-    "type": "- ",
+    "type": "-",
     "named": false
   },
   {
     "type": ". ",
+    "named": false
+  },
+  {
+    "type": "Personen",
+    "named": false
+  },
+  {
+    "type": "Portion",
+    "named": false
+  },
+  {
+    "type": "Portionen",
     "named": false
   },
   {

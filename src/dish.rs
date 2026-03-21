@@ -316,4 +316,50 @@ Just some random text
         // Should be halved (2 people / 4 recipe people = 0.5x)
         assert_eq!(dish.ingredients[0].amount, 200.0);
     }
+
+    #[test]
+    fn test_parse_portionen_format() {
+        let content = r#"4 Portionen
+
+## Zutaten
+- 100 g Rosinen
+- 5 EL Rum
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Kaiserschmarn", 8).unwrap();
+
+        assert_eq!(dish.recepie_people, 4);
+        assert_eq!(dish.people, Some(8));
+        assert_eq!(dish.ingredients.len(), 2);
+
+        // Should be doubled (8 / 4 = 2x)
+        assert_eq!(dish.ingredients[0].amount, 200.0);
+        assert_eq!(dish.ingredients[0].measure, "g");
+        assert_eq!(dish.ingredients[0].name, "Rosinen");
+
+        assert_eq!(dish.ingredients[1].amount, 10.0);
+        assert_eq!(dish.ingredients[1].measure, "EL");
+        assert_eq!(dish.ingredients[1].name, "Rum");
+    }
+
+    #[test]
+    fn test_parse_with_tabs() {
+        let content = "4 Portionen\n\n## Zutaten\n- 5\tEL\tRum, Cognac oder Wasser\n- 100\tg\tButter\n\n## Zubereitung\n1. Mix everything together.\n";
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Test Dish", 4).unwrap();
+
+        assert_eq!(dish.ingredients.len(), 2);
+
+        // Check tab-separated ingredient
+        assert_eq!(dish.ingredients[0].amount, 5.0);
+        assert_eq!(dish.ingredients[0].measure, "EL");
+        assert_eq!(dish.ingredients[0].name, "Rum, Cognac oder Wasser");
+
+        assert_eq!(dish.ingredients[1].amount, 100.0);
+        assert_eq!(dish.ingredients[1].measure, "g");
+        assert_eq!(dish.ingredients[1].name, "Butter");
+    }
 }

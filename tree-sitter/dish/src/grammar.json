@@ -63,8 +63,25 @@
           }
         },
         {
-          "type": "STRING",
-          "value": " Personen"
+          "type": "PATTERN",
+          "value": "[\\t ]+"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "Personen"
+            },
+            {
+              "type": "STRING",
+              "value": "Portionen"
+            },
+            {
+              "type": "STRING",
+              "value": "Portion"
+            }
+          ]
         }
       ]
     },
@@ -106,7 +123,11 @@
       "members": [
         {
           "type": "STRING",
-          "value": "- "
+          "value": "-"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[\\t ]+"
         },
         {
           "type": "FIELD",
@@ -117,8 +138,8 @@
           }
         },
         {
-          "type": "STRING",
-          "value": " "
+          "type": "PATTERN",
+          "value": "[\\t ]+"
         },
         {
           "type": "FIELD",
@@ -129,8 +150,8 @@
           }
         },
         {
-          "type": "STRING",
-          "value": " "
+          "type": "PATTERN",
+          "value": "[\\t ]+"
         },
         {
           "type": "FIELD",
@@ -237,7 +258,7 @@
   "extras": [
     {
       "type": "PATTERN",
-      "value": "[\\t ]"
+      "value": "[\\t ]+"
     }
   ],
   "conflicts": [],
