@@ -14,56 +14,88 @@ pub(crate) struct Ingredient {
     pub(crate) dish: String,
 }
 
-pub(crate) struct IngredientList(Ingredients);
+pub(crate) struct IngredientList(pub(crate) Ingredients);
 
 impl IngredientList {
-    /// Accumulate ingredients.
-    fn accumulate(&mut self) {
-        /* self.0 = self
-        .0
-        .into_iter()
-        .fold(
-            HashMap::new(),
-            |mut acc: HashMap<String, Vec<Ingredient>>, elem| {
-                if let Some(amounts) = acc.get_mut(&elem.name) {
-                    amounts.push(elem)
-                } else {
-                    acc.insert(elem.name, vec![elem]);
-                }
-
-                acc
-            },
-        )
-        .iter()
-        .collect() */
-        todo!()
+    pub(crate) fn new() -> Self {
+        Self(Vec::new())
     }
+
+    pub(crate) fn from(ingredients: Ingredients) -> Self {
+        Self(ingredients)
+    }
+
+    /// Accumulate ingredients by name and unit.
+    pub(crate) fn accumulate(&mut self) {
+        let mut grouped: HashMap<(String, String), Vec<Ingredient>> = HashMap::new();
+
+        for ingredient in self.0.drain(..) {
+            let key = (ingredient.name.clone(), ingredient.measure.clone());
+            grouped.entry(key).or_insert_with(Vec::new).push(ingredient);
+        }
+
+        self.0 = grouped
+            .into_iter()
+            .map(|((name, measure), ingredients)| {
+                let total_amount: f32 = ingredients.iter().map(|i| i.amount).sum();
+                let dishes: Vec<String> = ingredients.iter().map(|i| i.dish.clone()).collect();
+
+                Ingredient {
+                    amount: total_amount,
+                    measure: measure.clone(),
+                    name: name.clone(),
+                    dish: dishes.join(", "),
+                }
+            })
+            .collect();
+    }
+
     /// Generate md shopping list.
     pub(crate) fn as_md_list(&self) -> String {
-        /* let mut all = vec![];
+        let mut accumulated = self.clone();
+        accumulated.accumulate();
 
-        for (name, amount) in self.0 {
-            all.push(format!(
-                "- {name} [{}] ({})",
-                amount
-                    .iter()
-                    .map(|amount| format!("{}{}", amount.amount, amount.measure))
-                    .collect::<Vec<_>>()
-                    .join(", "),
-                amount
-                    .iter()
-                    .map(|amount| amount.dish.as_str())
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            ));
-        }
-        all.sort();
-        all.join("\n") */
-        todo!()
+        let mut items: Vec<String> = accumulated
+            .0
+            .iter()
+            .map(|ingredient| {
+                let amount_str = if ingredient.measure.is_empty() {
+                    format!("{:.1}", ingredient.amount)
+                } else {
+                    format!("{:.1} {}", ingredient.amount, ingredient.measure)
+                };
+
+                format!(
+                    "- {}: {} ({})",
+                    ingredient.name, amount_str, ingredient.dish
+                )
+            })
+            .collect();
+
+        items.sort();
+        items.join("\n")
     }
 
     /// Generate clustered md shopping list with AI.
     pub(crate) fn as_clustered_md_list(&self) -> String {
-        todo!()
+        // For now, just use the same implementation as as_md_list
+        self.as_md_list()
+    }
+}
+
+impl Clone for Ingredient {
+    fn clone(&self) -> Self {
+        Self {
+            amount: self.amount,
+            measure: self.measure.clone(),
+            name: self.name.clone(),
+            dish: self.dish.clone(),
+        }
+    }
+}
+
+impl Clone for IngredientList {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
     }
 }
