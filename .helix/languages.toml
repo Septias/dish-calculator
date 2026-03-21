@@ -1,0 +1,12 @@
+
+[[language]]
+auto-format = true
+# language-servers = ["tinymist"] # , "typos-lsp"]
+name = "menu"
+language-id = "menu"
+scope = "source.menu"
+file-types = ["menu"]
+
+[[grammar]]
+name = "menu"
+src = "../tree-sitter"
