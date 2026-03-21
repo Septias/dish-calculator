@@ -16,4 +16,8 @@ tokio = { version="*", features = ["fs", "macros", "rt-multi-thread"]}
 futures = "*"
 tree-sitter = "0.25"
 tree-sitter-menu = { path = "./tree-sitter" }
+tree-sitter-dish = { path = "./tree-sitter/dish" }
 regex = "1"
+
+[dev-dependencies]
+tempfile = "3"

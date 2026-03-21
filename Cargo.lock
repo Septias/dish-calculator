@@ -1269,9 +1269,11 @@ dependencies = [
  "markdown",
  "markdown2pdf",
  "regex",
+ "tempfile",
  "thiserror 2.0.12",
  "tokio",
  "tree-sitter",
+ "tree-sitter-dish",
  "tree-sitter-menu",
 ]
 
@@ -2177,6 +2179,14 @@ dependencies = [
  "regex-syntax",
  "serde_json",
  "streaming-iterator",
+ "tree-sitter-language",
+]
+
+[[package]]
+name = "tree-sitter-dish"
+version = "0.1.0"
+dependencies = [
+ "cc",
  "tree-sitter-language",
 ]
 

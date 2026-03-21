@@ -3,6 +3,7 @@ use std::collections::HashMap;
 pub(crate) type Ingredients = Vec<Ingredient>;
 
 /// A single ingredient
+#[derive(Debug)]
 pub(crate) struct Ingredient {
     /// Amount of ingredient.
     pub(crate) amount: f32,
