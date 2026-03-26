@@ -2,3 +2,4 @@ target
 .direnv/bin/nix-direnv-reload
 .direnv
 .aider*
+/test-data/Kochen
