@@ -55,6 +55,9 @@
             gcc
             rust-analyzer
             tree-sitter
+            # (tree-sitter.override {
+            #   webUISupport = true;
+            # })
           ];
 
           env = {
