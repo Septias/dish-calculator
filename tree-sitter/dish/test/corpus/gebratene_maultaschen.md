@@ -1,24 +1,18 @@
 ================
-Kaiserschmarn with Portionen format
+Gebratene Maultaschen
 ================
 
-4 Portionen
-
+- 10 Personen
 ## Zutaten
-- 100 g Rosinen
-- 5 EL	Rum, Cognac oder Wasser
-- 6 Eier
-- 1 Pck. Bourbon-Vanillezucker
-- 1 EL Zucker
-- 1 Prise Salz
-- 250 g Mehl
-- 500 ml Milch
-- 65 g Butter
-- 4 TL Puderzucker
+- 2 kg	Maultaschen
+- 4 Stk	Zwiebeln
+- 20 Stk	Ei
+- 1 Bund	Petersilie
+- 5 EL	Öl
+- 7 EL	Milch
+- 400 g	Schinkenalternative?
 
-## Zubereitung
-1. Vorab: Dieses traditionelle Rezept stammt aus einem Tiroler Landgasthof und wird dort seit vielen Generationen so zubereitet. Es enthält einige schöne Geheimnisse aus Omas Trickkiste, die nicht immer preisgegeben werden. Auf jeden Fall nichts für Kalorienzähler.
-
+https://eat.de/rezept/gebratene-maultaschen-ei/	
 ---
 
 (source_file
@@ -66,18 +60,8 @@ Kaiserschmarn with Portionen format
         (integer))
       unit: (unit)
       name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name)))
-  (preparation_section
-    (preparation_header)
-    (step_line
-      number: (integer)
-      text: (text))))
+    (preparation_section
+      (preparation_header)
+      (step_line
+        number: (integer)
+        text: (text))))

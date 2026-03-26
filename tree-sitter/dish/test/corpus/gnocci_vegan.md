@@ -1,24 +1,30 @@
 ================
-Kaiserschmarn with Portionen format
+Gnocci Vegan
 ================
 
-4 Portionen
+2 Personen
+
 
 ## Zutaten
-- 100 g Rosinen
-- 5 EL	Rum, Cognac oder Wasser
-- 6 Eier
-- 1 Pck. Bourbon-Vanillezucker
-- 1 EL Zucker
-- 1 Prise Salz
-- 250 g Mehl
-- 500 ml Milch
-- 65 g Butter
-- 4 TL Puderzucker
-
+- 400 g Gnocchi
+- Salzwasser 
+- 3 Tomaten  
+- 1 Zucchini
+- 1 Zwiebel
+- 1 Knoblauchzehe
+- 100 g Schafskäse (vegan)
+- 1 EL Öl  
+- Gemüsebrühepulver
+- 1 TL Oregano
+- 1 EL Petersilie
 ## Zubereitung
-1. Vorab: Dieses traditionelle Rezept stammt aus einem Tiroler Landgasthof und wird dort seit vielen Generationen so zubereitet. Es enthält einige schöne Geheimnisse aus Omas Trickkiste, die nicht immer preisgegeben werden. Auf jeden Fall nichts für Kalorienzähler.
-
+Die Gnocchi in reichlich Salzwasser kochen.  
+  
+Währenddessen die Tomaten grob würfeln, die Zucchini fein würfeln oder in Stifte schneiden, Zwiebeln und Knoblauch fein schneiden. Den Schafskäse zerkrümeln, hacken.  
+  
+Das Öl in einer Pfanne erhitzen, Zwiebeln und Knoblauch darin anbraten, die Zucchini auf höchster Hitze ca. drei Minuten kräftig mit anbraten. Etwas Wasser hinzufügen und bei mittlerer Hitze ungefähr acht Minuten dünsten lassen. Mit Salz, Pfeffer und Gemüsebrühe vorsichtig würzen.  
+  
+Nun die Tomaten, Schafskäse und Kräuter hinzufügen. Alles gut umrühren, damit eine gebundene Masse entsteht. Nochmals abschmecken und ganz zum Schluss die Gnocchi unterheben.
 ---
 
 (source_file
@@ -75,9 +81,14 @@ Kaiserschmarn with Portionen format
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (ingredient_name)))
-  (preparation_section
-    (preparation_header)
-    (step_line
-      number: (integer)
-      text: (text))))
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (preparation_section
+      (preparation_header)
+      (step_line
+        number: (integer)
+        text: (text))))

@@ -1,4 +1,10 @@
+================
+Curry
+================
+
 16 Personen
+
+
 ## Zutaten
 - 1280 g Reis
 - 1.6 kg Süßkartoffeln
@@ -26,3 +32,65 @@
 Du kannst beim Gemüse ganz nach Saison und Geschmack wählen, auf was du gerade Lust hast oder was der Kühlschrank heute hergibt. Für unser Thai-Curry brauchst du ungefähr 1 kg gemischtes Gemüse. Wunderbar passen unter anderem auch: Erbsen, Brechbohnen, Paprika oder auch Aubergine.
 
 Rote Currypaste ist milder als die sehr scharfe grüne Currypaste und würziger als gelbe Currypaste. Mit unserer verwendeten Menge bekommt das Curry eine feine Schärfe. Falls du gerne schärfer isst oder es gerne etwas milder hättest, kannst du die Menge der Currypaste anpassen. Achtung: Klassische rote Currypaste enthält teilweise Garnelenpaste. Daher solltest du beim Kauf noch einmal einen kurzen Blick auf die Zutatenliste werfen.
+---
+
+(source_file
+  (persons_line
+    count: (integer))
+  (ingredients_section
+    (ingredients_header)
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (preparation_section
+      (preparation_header)
+      (step_line
+        number: (integer)
+        text: (text))))

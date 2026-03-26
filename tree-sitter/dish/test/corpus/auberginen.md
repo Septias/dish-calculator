@@ -18,37 +18,45 @@ Auberginen Recipe
 2. Aubergine in der Mitte durchschneiden, längs halbieren und von innen gekreuzt einschneiden. Mit Sesamöl und Salz beträufeln. bei mittlerer Hitze für 5 Minuten anbraten. Aus der Pfanne nehmen und das Innere reichlich mit Miso Marinade bestreichen. Weitere 5 Minuten braten
 
 ---
+
 (source_file
   (persons_line
     (integer))
   (ingredients_section
     (ingredients_header)
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (float))
+      (quantity
+        (float))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name)))
   (preparation_section

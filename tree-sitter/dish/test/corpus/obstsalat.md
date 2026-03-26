@@ -1,19 +1,18 @@
 ================
-Mousse
+Obstsalat
 ================
 
-36 Personen
+40 Personen
 
 
 ## Zutaten
-- 1200 g Zartbitterschokolade  
-- 18 Stk. Eier  
-- 1500 ml Schlagsahne  
-- 6 Päck. Zartbitterstreusel
-
-
-## Zubereitung
-??
+- 20 Apfel  
+- 20 Banane  
+- 20 Birne  
+- 2 kg Weintrauben  
+- 2 kg Heidelbeeren  
+- 2 kg Erdbeeren  
+- ca. 30 EL Zitronensaft
 ---
 
 (source_file
@@ -21,6 +20,21 @@ Mousse
     count: (integer))
   (ingredients_section
     (ingredients_header)
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))

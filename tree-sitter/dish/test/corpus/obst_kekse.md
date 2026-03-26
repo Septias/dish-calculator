@@ -1,19 +1,14 @@
 ================
-Mousse
+Obst Kekse
 ================
 
-36 Personen
+4 Personen
 
 
 ## Zutaten
-- 1200 g Zartbitterschokolade  
-- 18 Stk. Eier  
-- 1500 ml Schlagsahne  
-- 6 Päck. Zartbitterstreusel
-
-
-## Zubereitung
-??
+- 8 Kekse (mittel)
+- 2 Apfel
+- 2 Bananen
 ---
 
 (source_file
@@ -21,11 +16,6 @@ Mousse
     count: (integer))
   (ingredients_section
     (ingredients_header)
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))

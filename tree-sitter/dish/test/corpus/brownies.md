@@ -1,4 +1,10 @@
+================
+Brownies
+================
+
 3 Personen
+
+
 ## Zutaten
 - 2 EL gemahlene Leinsamen  
 - 150 g Weizenmehl  
@@ -10,3 +16,61 @@
 - 1 TL Vanilleextrakt  
 - 80 ml pflanzliche Milch  
 - 150 g vegane Schokodrops
+
+---
+
+(source_file
+  (persons_line
+    count: (integer))
+  (ingredients_section
+    (ingredients_header)
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (float))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))))

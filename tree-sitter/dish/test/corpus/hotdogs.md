@@ -1,19 +1,17 @@
 ================
-Mousse
+Hotdogs
 ================
 
-36 Personen
-
+10 Personen
 
 ## Zutaten
-- 1200 g Zartbitterschokolade  
-- 18 Stk. Eier  
-- 1500 ml Schlagsahne  
-- 6 Päck. Zartbitterstreusel
-
-
-## Zubereitung
-??
+- 25 Stück Hotdog Brot
+- 25 Stück Würstchenalternative
+- 2,5 Packungen Röstzwiebeln
+- 1 großes Glas	Essiggurken 
+- 2 flaschen	Ketchup
+- 1 flasche	Majo
+- 2 Tuben	Senf 
 ---
 
 (source_file
@@ -21,6 +19,21 @@ Mousse
     count: (integer))
   (ingredients_section
     (ingredients_header)
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))

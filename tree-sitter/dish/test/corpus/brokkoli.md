@@ -17,29 +17,35 @@ Brokkoli Recipe
 2. Aus Dinkelmehl, Backpulver, eiskaltem Wasser und Salz einen Backteig rühren. Das Öl in einer tiefen Pfanne erhitzen. Die Brokkoliröschen im Backteig wenden und im heißen Fett goldgelb frittieren. Auf Küchenpapier abtropfen lassen.
 
 ---
+
 (source_file
   (persons_line
     (integer))
   (ingredients_section
     (ingredients_header)
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name))
     (ingredient_line
-      (quantity (integer))
+      (quantity
+        (integer))
       (unit)
       (ingredient_name)))
   (preparation_section
