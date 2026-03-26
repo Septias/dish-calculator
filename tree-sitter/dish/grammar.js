@@ -1,18 +1,15 @@
 module.exports = grammar({
   name: "dish",
 
-  // Keep newlines significant; ignore only spaces and tabs
-  extras: _ => [/[\t ]+/],
+  extras: _ => [/[\t \n]+/],
 
   rules: {
     source_file: $ =>
       seq(
-        repeat("\n"),
         $.persons_line,
-        repeat1("\n"),
-        repeat(seq($.preamble_line, "\n")),
+        repeat($.preamble_line),
         $.ingredients_section,
-        repeat("\n"),
+        repeat(choice(prec(1, $.ingredient_line), $.preamble_line)),
         optional($.preparation_section),
       ),
 
@@ -24,46 +21,24 @@ module.exports = grammar({
       ),
 
     ingredients_section: $ =>
-      prec.right(1, seq("## Zutaten", repeat1("\n"), repeat1(seq($.ingredient_line, "\n")))),
+      prec.right(1, seq("## Zutaten", repeat1($.ingredient_line))),
 
 
     ingredient_line: $ =>
-      seq(
-        "-",
-        /[\t ]+/,
-        optional(
-          seq(
-            field("quantity", $.quantity),
-            /[\t ]+/
-          )
-        ),
-        optional(
-          seq(
-            field("unit", $.unit),
-            /[\t ]+/
-          )
-        ),
-        field("name", $.ingredient_name),
-        optional(/[\t ]+/)  // Allow trailing spaces
+      choice(
+        prec(3, seq("-", field("quantity", $.quantity), field("unit", $.unit), field("name", $.text))),
+        prec(2, seq("-", field("quantity", $.quantity), field("name", $.text))),
+        prec(1, seq("-", field("name", $.text))),
       ),
 
-    preparation_section: $ =>
-      prec.right(1, seq("## Zubereitung", repeat1("\n"), repeat(seq($.step_line, "\n")), repeat("\n"))),
-
-
-    step_line: $ =>
-        seq(field("text", $.text))
-      ,
-
-    // Lines of free text that must not start with a section header (## ...)
-    preamble_line: _ => token(prec(1, /([^#][^\n\r]*|#[^#][^\n\r]*)/)),
+    preparation_section: $ => seq("## Zubereitung", repeat($.text)),
 
     // Tokens
     quantity: $ => choice($.float, $.integer),
     integer: _ => /\d+/,
     float: _ => /\d+\.\d+/,
     unit: _ => /[^\s]+/,
-    ingredient_name: _ => /[^\n\r]*/,
-    text: _ => /[^\n\r]*/
+    text: _ => /[^\n\r]+/,
+    preamble_line: _ => /[^#\-\n\r][^\n\r]*/,
   }
 });

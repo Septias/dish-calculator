@@ -22,37 +22,16 @@ Brokkoli Recipe
   (persons_line
     (integer))
   (ingredients_section
-    (ingredients_header)
     (ingredient_line
-      (quantity
-        (integer))
-      (unit)
-      (ingredient_name))
-    (ingredient_line
-      (quantity
-        (integer))
-      (unit)
-      (ingredient_name))
-    (ingredient_line
-      (quantity
-        (integer))
-      (unit)
-      (ingredient_name))
-    (ingredient_line
-      (quantity
-        (integer))
-      (unit)
-      (ingredient_name))
-    (ingredient_line
-      (quantity
-        (integer))
-      (unit)
-      (ingredient_name)))
+      (text)))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
   (preparation_section
-    (preparation_header)
-    (step_line
-      (integer)
-      (text))
-    (step_line
-      (integer)
-      (text))))
+    (text)
+    (text)))

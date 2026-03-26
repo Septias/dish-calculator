@@ -23,54 +23,23 @@ Brownies
   (persons_line
     count: (integer))
   (ingredients_section
-    (ingredients_header)
     (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (float))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))))
+      name: (text)))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text)))

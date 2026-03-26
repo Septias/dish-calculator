@@ -20,29 +20,13 @@ Mousse
   (persons_line
     count: (integer))
   (ingredients_section
-    (ingredients_header)
     (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (preparation_section
-      (preparation_header)
-      (step_line
-        number: (integer)
-        text: (text))))
+      name: (text)))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (preparation_section
+    (text)))

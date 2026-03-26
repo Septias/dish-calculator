@@ -15,7 +15,6 @@ Spinatrisotto
 - 1 l Gemüsebrühe
 - 100 g Nusskernemischung (z. B. Cashew, Haselnüsse, Mandeln, Walnüsse)
 - 250 g Pilze
-- Salz
 - Pfeffer
 - 2 EL Zitronensaft
 
@@ -33,70 +32,31 @@ Risotto vom Herd nehmen, Spinat (bis auf ein paar Blätter) und geriebenen Käse
 (source_file
   (persons_line
     count: (integer))
+  (preamble_line)
   (ingredients_section
-    (ingredients_header)
     (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (preparation_section
-      (preparation_header)
-      (step_line
-        number: (integer)
-        text: (text))))
+      name: (text)))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (preparation_section
+    (text)
+    (text)
+    (text)))

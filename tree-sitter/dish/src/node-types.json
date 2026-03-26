@@ -8,14 +8,14 @@
         "required": true,
         "types": [
           {
-            "type": "ingredient_name",
+            "type": "text",
             "named": true
           }
         ]
       },
       "quantity": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "quantity",
@@ -25,7 +25,7 @@
       },
       "unit": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "unit",
@@ -34,11 +34,6 @@
         ]
       }
     }
-  },
-  {
-    "type": "ingredient_name",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "ingredients_section",
@@ -50,10 +45,6 @@
       "types": [
         {
           "type": "ingredient_line",
-          "named": true
-        },
-        {
-          "type": "ingredients_header",
           "named": true
         }
       ]
@@ -81,14 +72,10 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "preparation_header",
-          "named": true
-        },
-        {
-          "type": "step_line",
+          "type": "text",
           "named": true
         }
       ]
@@ -123,11 +110,19 @@
       "required": true,
       "types": [
         {
+          "type": "ingredient_line",
+          "named": true
+        },
+        {
           "type": "ingredients_section",
           "named": true
         },
         {
           "type": "persons_line",
+          "named": true
+        },
+        {
+          "type": "preamble_line",
           "named": true
         },
         {
@@ -138,38 +133,11 @@
     }
   },
   {
-    "type": "step_line",
-    "named": true,
-    "fields": {
-      "number": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "integer",
-            "named": true
-          }
-        ]
-      },
-      "text": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "text",
-            "named": true
-          }
-        ]
-      }
-    }
+    "type": "## Zubereitung",
+    "named": false
   },
   {
-    "type": "text",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "\n",
+    "type": "## Zutaten",
     "named": false
   },
   {
@@ -177,15 +145,7 @@
     "named": false
   },
   {
-    "type": ". ",
-    "named": false
-  },
-  {
     "type": "Personen",
-    "named": false
-  },
-  {
-    "type": "Portion",
     "named": false
   },
   {
@@ -197,15 +157,15 @@
     "named": true
   },
   {
-    "type": "ingredients_header",
-    "named": true
-  },
-  {
     "type": "integer",
     "named": true
   },
   {
-    "type": "preparation_header",
+    "type": "preamble_line",
+    "named": true
+  },
+  {
+    "type": "text",
     "named": true
   },
   {

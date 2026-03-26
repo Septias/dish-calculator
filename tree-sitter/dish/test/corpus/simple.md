@@ -1,21 +1,65 @@
 ================
-Spinatrisotto
+Simple
 ================
 
 4 Portionen
 30min Zubereitungszeit
 
 ## Zutaten
-- 400 g Baby-Blattspinat
-- 80 g Italienischer Hartkäse (mit mikrobiellem Lab; z. B. Montello)
-- 2 Schalotten
-- 5 EL Olivenöl
-- 300 g Risotto-Reis
-- 100 ml trockener Weißwein
-- 1 l Gemüsebrühe
-- 100 g Nusskernemischung (z. B. Cashew, Haselnüsse, Mandeln, Walnüsse)
-- 250 g Pilze
-- Salz
-- Pfeffer
-- 2 EL Zitronensaft
+- 200 g Tomaten, geschälte, aus der Dose
+- 125 g Maiskörner
+- 1 Paprikaschote, rote
+- 1 Paprikaschote, grüne
+- 2 Zwiebel
+- 4 EL Olivenöl
+- 200 g Kidneybohnen
+- 1 Prise Cayennepfeffer
+- 0.5 TL Kreuzkümmelpulver
+- 1 EL Tomatenmark
+- 1 Prise Zucker
+- 6 stück Weizentortilla
+- 6 EL Crème vega
+- 200 g Käse, geriebener + vegan
 
+
+## Zubereitung
+Dieses traditionelle Rezept stammt aus einem Tiroler Landgasthof und wird dort seit vielen Generationen
+  
+----
+
+(source_file
+  (persons_line
+    (integer))
+  (preamble_line)
+  (ingredients_section
+    (ingredient_line
+      (text)))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (ingredient_line
+    (text))
+  (preparation_section
+    (text)
+    (text)))

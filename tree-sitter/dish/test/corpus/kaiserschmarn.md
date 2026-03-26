@@ -25,59 +25,25 @@ Kaiserschmarn with Portionen format
   (persons_line
     count: (integer))
   (ingredients_section
-    (ingredients_header)
     (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name)))
+      name: (text)))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
   (preparation_section
-    (preparation_header)
-    (step_line
-      number: (integer)
-      text: (text))))
+    (text)))

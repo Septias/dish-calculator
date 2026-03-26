@@ -11,10 +11,8 @@ Tagliatelle
 - 1 Dose Artischockenherzen (240 g Abtropfgewicht)
 - 1 Zwiebel
 - 2 Knoblauchzehe
-- 6 EL Olivenöl
-- 2 Dosen stückige Tomaten (à 400 g)
+- 2 Dosen stückige Tomaten (400 g)
 - 2 TL getrockneter Thymian 
-- Pfeffer
 - 400 g Tagliatelle (oder andere Bandnudeln)
 - 6 EL Balsamico-Essig
 - 250 g Ricotta
@@ -34,65 +32,29 @@ Tagliatelle
 (source_file
   (persons_line
     count: (integer))
+  (preamble_line)
   (ingredients_section
-    (ingredients_header)
     (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (ingredient_name))
-    (preparation_section
-      (preparation_header)
-      (step_line
-        number: (integer)
-        text: (text))))
+      name: (text)))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (ingredient_line
+    name: (text))
+  (preparation_section
+    (text)
+    (text)
+    (text)
+    (text)
+    (text)))

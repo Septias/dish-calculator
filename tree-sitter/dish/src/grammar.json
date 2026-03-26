@@ -6,25 +6,14 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "STRING",
-            "value": "\n"
-          }
-        },
-        {
           "type": "SYMBOL",
           "name": "persons_line"
         },
         {
-          "type": "STRING",
-          "value": "\n"
-        },
-        {
           "type": "REPEAT",
           "content": {
-            "type": "STRING",
-            "value": "\n"
+            "type": "SYMBOL",
+            "name": "preamble_line"
           }
         },
         {
@@ -32,22 +21,36 @@
           "name": "ingredients_section"
         },
         {
-          "type": "REPEAT1",
-          "content": {
-            "type": "STRING",
-            "value": "\n"
-          }
-        },
-        {
-          "type": "SYMBOL",
-          "name": "preparation_section"
-        },
-        {
           "type": "REPEAT",
           "content": {
-            "type": "STRING",
-            "value": "\n"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PREC",
+                "value": 1,
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "ingredient_line"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "preamble_line"
+              }
+            ]
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "preparation_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -76,89 +79,119 @@
             {
               "type": "STRING",
               "value": "Portionen"
-            },
-            {
-              "type": "STRING",
-              "value": "Portion"
             }
           ]
         }
       ]
     },
     "ingredients_section": {
-      "type": "SEQ",
+      "type": "PREC_RIGHT",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "## Zutaten"
+          },
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SYMBOL",
+              "name": "ingredient_line"
+            }
+          }
+        ]
+      }
+    },
+    "ingredient_line": {
+      "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "ingredients_header"
-        },
-        {
-          "type": "STRING",
-          "value": "\n"
-        },
-        {
-          "type": "REPEAT",
+          "type": "PREC",
+          "value": 3,
           "content": {
             "type": "SEQ",
             "members": [
               {
-                "type": "SYMBOL",
-                "name": "ingredient_line"
+                "type": "STRING",
+                "value": "-"
               },
               {
-                "type": "STRING",
-                "value": "\n"
+                "type": "FIELD",
+                "name": "quantity",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "quantity"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "unit",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "unit"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "name",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "text"
+                }
               }
             ]
           }
-        }
-      ]
-    },
-    "ingredients_header": {
-      "type": "STRING",
-      "value": "## Zutaten"
-    },
-    "ingredient_line": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "-"
         },
         {
-          "type": "PATTERN",
-          "value": "[\\t ]+"
-        },
-        {
-          "type": "FIELD",
-          "name": "quantity",
+          "type": "PREC",
+          "value": 2,
           "content": {
-            "type": "SYMBOL",
-            "name": "quantity"
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "-"
+              },
+              {
+                "type": "FIELD",
+                "name": "quantity",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "quantity"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "name",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "text"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "PATTERN",
-          "value": "[\\t ]+"
-        },
-        {
-          "type": "FIELD",
-          "name": "unit",
+          "type": "PREC",
+          "value": 1,
           "content": {
-            "type": "SYMBOL",
-            "name": "unit"
-          }
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\t ]+"
-        },
-        {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "ingredient_name"
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "-"
+              },
+              {
+                "type": "FIELD",
+                "name": "name",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "text"
+                }
+              }
+            ]
           }
         }
       ]
@@ -167,53 +200,11 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "preparation_header"
-        },
-        {
           "type": "STRING",
-          "value": "\n"
+          "value": "## Zubereitung"
         },
         {
           "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "step_line"
-              },
-              {
-                "type": "STRING",
-                "value": "\n"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "preparation_header": {
-      "type": "STRING",
-      "value": "## Zubereitung"
-    },
-    "step_line": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "number",
-          "content": {
-            "type": "SYMBOL",
-            "name": "integer"
-          }
-        },
-        {
-          "type": "STRING",
-          "value": ". "
-        },
-        {
-          "type": "FIELD",
-          "name": "text",
           "content": {
             "type": "SYMBOL",
             "name": "text"
@@ -246,19 +237,19 @@
       "type": "PATTERN",
       "value": "[^\\s]+"
     },
-    "ingredient_name": {
-      "type": "PATTERN",
-      "value": "[^\\n]*"
-    },
     "text": {
       "type": "PATTERN",
-      "value": "[^\\n]*"
+      "value": "[^\\n\\r]+"
+    },
+    "preamble_line": {
+      "type": "PATTERN",
+      "value": "[^#\\-\\n\\r][^\\n\\r]*"
     }
   },
   "extras": [
     {
       "type": "PATTERN",
-      "value": "[\\t ]+"
+      "value": "[\\t \\n]+"
     }
   ],
   "conflicts": [],
