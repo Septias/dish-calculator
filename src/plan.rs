@@ -221,15 +221,14 @@ fn parse_menu_item(
             "dish_with_count" => {
                 if let Some(dish_node) = child.child_by_field_name("dish") {
                     eprintln!("            Found dish node: {}", dish_node.kind());
-                    eprintln!(
-                        "            Dish node children: {:?}",
-                        (0..dish_node.child_count())
-                            .map(|i| dish_node.child(i).unwrap().kind())
-                            .collect::<Vec<_>>()
-                    );
-                    // The dish node has a nested "name" field
-                    if let Some(name_node) = dish_node.child_by_field_name("name") {
-                        let dish_name = content[name_node.byte_range()].trim();
+
+                    // Get the full dish text (e.g., "[[Dish Name]]")
+                    let dish_text = content[dish_node.byte_range()].trim();
+                    eprintln!("            Dish text: {}", dish_text);
+
+                    // Strip the [[ and ]] brackets to get the dish name
+                    if dish_text.starts_with("[[") && dish_text.ends_with("]]") {
+                        let dish_name = &dish_text[2..dish_text.len()-2];
                         eprintln!("            Dish name: {}", dish_name);
 
                         // Extract multiplier if present
@@ -263,7 +262,7 @@ fn parse_menu_item(
                             eprintln!("            NOT found in cookbook");
                         }
                     } else {
-                        eprintln!("            No name node found");
+                        eprintln!("            Invalid dish format (missing brackets)");
                     }
                 } else {
                     eprintln!("            No dish node found");
@@ -275,5 +274,349 @@ fn parse_menu_item(
             }
             _ => {}
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::Ingredient;
+    use std::io::Write;
+    use tempfile::{NamedTempFile, TempDir};
+
+    // Helper to create test ingredients
+    fn make_ingredient(amount: f32, measure: &str, name: &str, dish: &str) -> Ingredient {
+        Ingredient {
+            amount,
+            measure: measure.to_string(),
+            name: name.to_string(),
+            dish: dish.to_string(),
+        }
+    }
+
+    // Helper to create a test dish file
+    fn create_test_dish_file(content: &str) -> NamedTempFile {
+        let mut file = NamedTempFile::new().unwrap();
+        file.write_all(content.as_bytes()).unwrap();
+        file.flush().unwrap();
+        file
+    }
+
+    #[test]
+    fn test_ingredient_list_add() {
+        let list1 = IngredientList::from(vec![
+            make_ingredient(100.0, "g", "Butter", "Dish1"),
+            make_ingredient(200.0, "ml", "Milch", "Dish1"),
+        ]);
+
+        let list2 = IngredientList::from(vec![
+            make_ingredient(50.0, "g", "Zucker", "Dish2"),
+        ]);
+
+        let combined = list1 + list2;
+        assert_eq!(combined.0.len(), 3);
+    }
+
+    #[test]
+    fn test_ingredient_list_sum() {
+        let lists = vec![
+            IngredientList::from(vec![
+                make_ingredient(100.0, "g", "Butter", "Dish1"),
+            ]),
+            IngredientList::from(vec![
+                make_ingredient(200.0, "ml", "Milch", "Dish2"),
+            ]),
+            IngredientList::from(vec![
+                make_ingredient(50.0, "g", "Zucker", "Dish3"),
+            ]),
+        ];
+
+        let total: IngredientList = lists.into_iter().sum();
+        assert_eq!(total.0.len(), 3);
+    }
+
+    #[test]
+    fn test_ingredient_list_sum_empty() {
+        let lists: Vec<IngredientList> = vec![];
+        let total: IngredientList = lists.into_iter().sum();
+        assert_eq!(total.0.len(), 0);
+    }
+
+    #[test]
+    fn test_day_shopping_list_single_dish() {
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 200 ml Milch
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(dish_content);
+        let dish = Dish::from_file(file.path(), "Test Dish", 2).unwrap();
+
+        let day = Day {
+            dishes: vec![dish],
+        };
+
+        let shopping_list = day.shopping_list();
+        assert_eq!(shopping_list.0.len(), 2);
+        assert_eq!(shopping_list.0[0].amount, 100.0);
+        assert_eq!(shopping_list.0[0].name, "Butter");
+        assert_eq!(shopping_list.0[1].amount, 200.0);
+        assert_eq!(shopping_list.0[1].name, "Milch");
+    }
+
+    #[test]
+    fn test_day_shopping_list_multiple_dishes() {
+        let dish1_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 200 ml Milch
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let dish2_content = r#"2 Personen
+
+## Zutaten
+- 50 g Zucker
+- 3 Stück Eier
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file1 = create_test_dish_file(dish1_content);
+        let file2 = create_test_dish_file(dish2_content);
+
+        let dish1 = Dish::from_file(file1.path(), "Dish1", 2).unwrap();
+        let dish2 = Dish::from_file(file2.path(), "Dish2", 2).unwrap();
+
+        let day = Day {
+            dishes: vec![dish1, dish2],
+        };
+
+        let shopping_list = day.shopping_list();
+        assert_eq!(shopping_list.0.len(), 4);
+    }
+
+    #[test]
+    fn test_day_shopping_list_empty() {
+        let day = Day { dishes: vec![] };
+        let shopping_list = day.shopping_list();
+        assert_eq!(shopping_list.0.len(), 0);
+    }
+
+    #[test]
+    fn test_weekplan_shopping_list() {
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(dish_content);
+        let dish1 = Dish::from_file(file.path(), "Dish1", 2).unwrap();
+        let dish2 = Dish::from_file(file.path(), "Dish2", 2).unwrap();
+
+        let day1 = Day {
+            dishes: vec![dish1],
+        };
+        let day2 = Day {
+            dishes: vec![dish2],
+        };
+
+        let weekplan = WeekPlan {
+            _start: chrono::NaiveDate::from_ymd_opt(2026, 1, 1).unwrap(),
+            days: vec![day1, day2],
+        };
+
+        let shopping_list = weekplan.shopping_list();
+        // Two dishes with same ingredient should result in 2 separate entries (before accumulation)
+        assert_eq!(shopping_list.0.len(), 2);
+    }
+
+    #[test]
+    fn test_weekplan_from_file_parses_persons() {
+        let menu_content = r#"Personen: 4
+Starttag: 2026-03-01
+Montag: [[Test Dish]]
+"#;
+        let menu_file = create_test_dish_file(menu_content);
+
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let _dish_file = create_test_dish_file(dish_content);
+
+        // Create a temp dir for cookbook
+        let temp_dir = TempDir::new().unwrap();
+        let dish_path = temp_dir.path().join("Test Dish.txt");
+        std::fs::write(&dish_path, dish_content).unwrap();
+
+        let cookbook = CookBook::from_file(temp_dir.path());
+
+        let weekplan = WeekPlan::from_file(menu_file.path(), &cookbook);
+
+        // Should have parsed the file successfully
+        assert_eq!(weekplan.days.len(), 1);
+        assert_eq!(weekplan.days[0].dishes.len(), 1);
+        // Should have scaled to 4 people (2x the recipe)
+        let ingredients = weekplan.days[0].dishes[0].shopping_list();
+        assert_eq!(ingredients[0].amount, 200.0); // 100g * 2
+    }
+
+    #[test]
+    fn test_weekplan_from_file_parses_start_date() {
+        let menu_content = r#"Personen: 2
+Starttag: 2026-12-25
+Montag: [[Test Dish]]
+"#;
+        let menu_file = create_test_dish_file(menu_content);
+
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let temp_dir = TempDir::new().unwrap();
+        let dish_path = temp_dir.path().join("Test Dish.txt");
+        std::fs::write(&dish_path, dish_content).unwrap();
+
+        let cookbook = CookBook::from_file(temp_dir.path());
+        let weekplan = WeekPlan::from_file(menu_file.path(), &cookbook);
+
+        assert_eq!(
+            weekplan._start,
+            chrono::NaiveDate::from_ymd_opt(2026, 12, 25).unwrap()
+        );
+    }
+
+    #[test]
+    fn test_weekplan_from_file_multiple_dishes_per_day() {
+        let menu_content = r#"Personen: 2
+Starttag: 2026-01-01
+Montag: [[Dish1]], [[Dish2]]
+"#;
+        let menu_file = create_test_dish_file(menu_content);
+
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let temp_dir = TempDir::new().unwrap();
+        std::fs::write(temp_dir.path().join("Dish1.txt"), dish_content).unwrap();
+        std::fs::write(temp_dir.path().join("Dish2.txt"), dish_content).unwrap();
+
+        let cookbook = CookBook::from_file(temp_dir.path());
+        let weekplan = WeekPlan::from_file(menu_file.path(), &cookbook);
+
+        assert_eq!(weekplan.days.len(), 1);
+        assert_eq!(weekplan.days[0].dishes.len(), 2);
+    }
+
+    #[test]
+    fn test_weekplan_from_file_multiple_days() {
+        let menu_content = r#"Personen: 2
+Starttag: 2026-01-01
+Montag: [[Dish1]]
+Dienstag: [[Dish2]]
+Mittwoch: [[Dish3]]
+"#;
+        let menu_file = create_test_dish_file(menu_content);
+
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let temp_dir = TempDir::new().unwrap();
+        std::fs::write(temp_dir.path().join("Dish1.txt"), dish_content).unwrap();
+        std::fs::write(temp_dir.path().join("Dish2.txt"), dish_content).unwrap();
+        std::fs::write(temp_dir.path().join("Dish3.txt"), dish_content).unwrap();
+
+        let cookbook = CookBook::from_file(temp_dir.path());
+        let weekplan = WeekPlan::from_file(menu_file.path(), &cookbook);
+
+        assert_eq!(weekplan.days.len(), 3);
+        assert_eq!(weekplan.days[0].dishes.len(), 1);
+        assert_eq!(weekplan.days[1].dishes.len(), 1);
+        assert_eq!(weekplan.days[2].dishes.len(), 1);
+    }
+
+    #[test]
+    fn test_weekplan_from_file_rest_day() {
+        let menu_content = r#"Personen: 2
+Starttag: 2026-01-01
+Montag: [[Dish1]]
+Dienstag: Reste
+"#;
+        let menu_file = create_test_dish_file(menu_content);
+
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let temp_dir = TempDir::new().unwrap();
+        std::fs::write(temp_dir.path().join("Dish1.txt"), dish_content).unwrap();
+
+        let cookbook = CookBook::from_file(temp_dir.path());
+        let weekplan = WeekPlan::from_file(menu_file.path(), &cookbook);
+
+        assert_eq!(weekplan.days.len(), 2);
+        assert_eq!(weekplan.days[0].dishes.len(), 1);
+        assert_eq!(weekplan.days[1].dishes.len(), 0); // Rest day = no dishes
+    }
+
+    #[test]
+    fn test_weekplan_from_file_dish_with_count() {
+        let menu_content = r#"Personen: 2
+Starttag: 2026-01-01
+Montag: [[Dish1]](4)
+"#;
+        let menu_file = create_test_dish_file(menu_content);
+
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let temp_dir = TempDir::new().unwrap();
+        std::fs::write(temp_dir.path().join("Dish1.txt"), dish_content).unwrap();
+
+        let cookbook = CookBook::from_file(temp_dir.path());
+        let weekplan = WeekPlan::from_file(menu_file.path(), &cookbook);
+
+        assert_eq!(weekplan.days.len(), 1);
+        assert_eq!(weekplan.days[0].dishes.len(), 1);
+        // Should be scaled to 4 people (dish count override)
+        let ingredients = weekplan.days[0].dishes[0].shopping_list();
+        assert_eq!(ingredients[0].amount, 200.0); // 100g * 2
     }
 }
