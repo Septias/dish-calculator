@@ -76,6 +76,22 @@ impl Dish {
             path: path.to_path_buf(),
         })
     }
+
+    pub(crate) fn shopping_list(&self) -> Vec<Ingredient> {
+        let base = self.recepie_people.max(1) as f32;
+        let target = self.people.unwrap_or(self.recepie_people) as f32;
+        let scale = target / base;
+
+        self.ingredients
+            .iter()
+            .map(|ing| Ingredient {
+                amount: ing.amount * scale,
+                measure: ing.measure.clone(),
+                name: ing.name.clone(),
+                dish: ing.dish.clone(),
+            })
+            .collect()
+    }
 }
 
 fn parse_ingredients_section(
@@ -279,5 +295,92 @@ Just some random text
         assert_eq!(dish.ingredients[1].amount, 100.0);
         assert_eq!(dish.ingredients[1].measure, "g");
         assert_eq!(dish.ingredients[1].name, "Butter");
+    }
+
+    #[test]
+    fn test_shopping_list_scales_up() {
+        let content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 200 ml Milch
+- 3 Stück Eier
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Test Dish", 4).unwrap();
+
+        let items = dish.shopping_list();
+        assert_eq!(items.len(), 3);
+        assert!((items[0].amount - 200.0).abs() < 1e-6);
+        assert_eq!(items[0].measure, "g");
+        assert_eq!(items[0].name, "Butter");
+
+        assert!((items[1].amount - 400.0).abs() < 1e-6);
+        assert_eq!(items[1].measure, "ml");
+        assert_eq!(items[1].name, "Milch");
+
+        assert!((items[2].amount - 6.0).abs() < 1e-6);
+        assert_eq!(items[2].measure, "Stück");
+        assert_eq!(items[2].name, "Eier");
+    }
+
+    #[test]
+    fn test_shopping_list_scales_down() {
+        let content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 200 ml Milch
+- 3 Stück Eier
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Test Dish", 1).unwrap();
+
+        let items = dish.shopping_list();
+        assert_eq!(items.len(), 3);
+        assert!((items[0].amount - 50.0).abs() < 1e-6);
+        assert_eq!(items[0].measure, "g");
+        assert_eq!(items[0].name, "Butter");
+
+        assert!((items[1].amount - 100.0).abs() < 1e-6);
+        assert_eq!(items[1].measure, "ml");
+        assert_eq!(items[1].name, "Milch");
+
+        assert!((items[2].amount - 1.5).abs() < 1e-6);
+        assert_eq!(items[2].measure, "Stück");
+        assert_eq!(items[2].name, "Eier");
+    }
+
+    #[test]
+    fn test_shopping_list_no_people_defaults_to_recipe_scale() {
+        let content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 200 ml Milch
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(content);
+        let mut dish = Dish::from_file(file.path(), "Test Dish", 2).unwrap();
+        // simulate "no requested people" -> should scale by 1.0 (use recipe_people)
+        dish.people = None;
+
+        let items = dish.shopping_list();
+        assert_eq!(items.len(), 2);
+        assert!((items[0].amount - 100.0).abs() < 1e-6);
+        assert_eq!(items[0].measure, "g");
+        assert_eq!(items[0].name, "Butter");
+
+        assert!((items[1].amount - 200.0).abs() < 1e-6);
+        assert_eq!(items[1].measure, "ml");
+        assert_eq!(items[1].name, "Milch");
     }
 }

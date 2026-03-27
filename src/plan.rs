@@ -3,7 +3,7 @@ use std::{fs, iter::Sum, ops::Add, path::Path};
 use anyhow::Context;
 use tree_sitter::Parser;
 
-use crate::{cookbook::CookBook, dish::Dish, types::IngredientList, DishPlanError};
+use crate::{cookbook::CookBook, dish::Dish, types::IngredientList};
 
 pub(crate) trait Plan {
     /// Generate a shopping list for all dishes.
@@ -21,13 +21,12 @@ impl Plan for Day {
     fn shopping_list(&self) -> IngredientList {
         self.dishes
             .iter()
-            .map(|dish| IngredientList::from(dish.ingredients.clone()))
+            .map(|dish| IngredientList::from(dish.shopping_list()))
             .sum()
     }
 
     fn from_file(_path: &Path, _cookbook: &CookBook) -> Self {
-        // This is not used - we use WeekPlan::from_file instead
-        unimplemented!("Use WeekPlan::from_file for parsing meal plans")
+        unimplemented!()
     }
 }
 
@@ -49,11 +48,9 @@ impl Sum for IngredientList {
 /// The week structure of a meal plan.
 pub(crate) struct WeekPlan {
     /// Start date used for PDF export.
-    pub(crate) start: chrono::NaiveDate,
+    pub(crate) _start: chrono::NaiveDate,
     /// Consecutive list of days.
     pub(crate) days: Vec<Day>,
-    /// The amount of people to feed.
-    pub(crate) people: usize,
 }
 
 impl Plan for WeekPlan {
@@ -120,9 +117,8 @@ impl Plan for WeekPlan {
         );
 
         Self {
-            start: start_date,
+            _start: start_date,
             days,
-            people,
         }
     }
 }
