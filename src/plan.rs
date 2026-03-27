@@ -15,8 +15,6 @@ pub(crate) trait Plan {
 pub(crate) struct Day {
     /// List of dishes.
     pub(crate) dishes: Vec<Dish>,
-    /// The amount of people to feed.
-    pub(crate) people: Option<usize>,
 }
 
 impl Plan for Day {
@@ -165,10 +163,7 @@ fn parse_day_line(
         }
     }
 
-    Day {
-        dishes,
-        people: day_people,
-    }
+    Day { dishes }
 }
 
 fn parse_menu(
@@ -222,7 +217,7 @@ fn parse_menu_item(
 ) {
     // The menu_item node directly contains either dish_with_count or shopping_marker
     // Get the first child which should be the actual content
-    let mut cursor = node.walk();
+    // let mut _cursor = node.walk();
 
     if let Some(child) = node.child(0) {
         eprintln!("          Menu item child kind: {}", child.kind());
@@ -242,35 +237,30 @@ fn parse_menu_item(
                         eprintln!("            Dish name: {}", dish_name);
 
                         // Extract multiplier if present
-                        let multiplier = if let Some(count_node) =
-                            child.child_by_field_name("count")
-                        {
+                        let dish_people = child.child_by_field_name("count").map(|count_node| {
                             let count_str = content[count_node.byte_range()].trim();
                             // Remove parentheses from count
                             let count_str = count_str.trim_start_matches('(').trim_end_matches(')');
                             count_str.parse::<usize>().unwrap_or(1)
-                        } else {
-                            1
-                        };
-
-                        eprintln!("            Multiplier: {}", multiplier);
+                        });
 
                         // Look up dish in cookbook
                         if let Some(dish_path) = cookbook.get(dish_name) {
                             eprintln!("            Found in cookbook: {:?}", dish_path);
-                            let people = day_people.unwrap_or(default_people);
-                            for _ in 0..multiplier {
-                                match Dish::from_file(dish_path, dish_name, people) {
-                                    Ok(dish) => {
-                                        eprintln!(
-                                            "            Loaded dish with {} ingredients",
-                                            dish.ingredients.len()
-                                        );
-                                        dishes.push(dish);
-                                    }
-                                    Err(e) => {
-                                        eprintln!("            Error loading dish: {}", e);
-                                    }
+
+                            // use the proper amount of people!
+                            let people =
+                                dish_people.unwrap_or(day_people.unwrap_or(default_people));
+                            match Dish::from_file(dish_path, dish_name, people) {
+                                Ok(dish) => {
+                                    eprintln!(
+                                        "            Loaded dish with {} ingredients",
+                                        dish.ingredients.len()
+                                    );
+                                    dishes.push(dish);
+                                }
+                                Err(e) => {
+                                    eprintln!("            Error loading dish: {}", e);
                                 }
                             }
                         } else {

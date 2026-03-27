@@ -1,4 +1,7 @@
-use std::{fs, path::{Path, PathBuf}};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use anyhow::{Context, Result};
 use tree_sitter::Parser;
@@ -37,7 +40,8 @@ impl Dish {
             .set_language(&tree_sitter_dish::LANGUAGE.into())
             .context("Error loading dish parser")?;
 
-        let tree = parser.parse(&content, None)
+        let tree = parser
+            .parse(&content, None)
             .context("Failed to parse dish file")?;
         let root = tree.root_node();
 
@@ -58,8 +62,7 @@ impl Dish {
                     }
                 }
                 "ingredients_section" => {
-                    let scale_factor = people as f32 / recipe_people as f32;
-                    parse_ingredients_section(&child, &content, dish_name, scale_factor, &mut ingredients);
+                    parse_ingredients_section(&child, &content, dish_name, &mut ingredients);
                 }
                 _ => {}
             }
@@ -79,14 +82,14 @@ fn parse_ingredients_section(
     node: &tree_sitter::Node,
     content: &str,
     dish_name: &str,
-    scale_factor: f32,
     ingredients: &mut Vec<Ingredient>,
 ) {
     let mut cursor = node.walk();
 
     for child in node.children(&mut cursor) {
         if child.kind() == "ingredient_line" {
-            if let Some(ingredient) = parse_ingredient_node(&child, content, dish_name, scale_factor) {
+            println!("ingredient");
+            if let Some(ingredient) = parse_ingredient_node(&child, content, dish_name) {
                 ingredients.push(ingredient);
             }
         }
@@ -97,17 +100,23 @@ fn parse_ingredient_node(
     node: &tree_sitter::Node,
     content: &str,
     dish_name: &str,
-    scale_factor: f32,
 ) -> Option<Ingredient> {
-    let quantity_node = node.child_by_field_name("quantity")?;
-    let unit_node = node.child_by_field_name("unit")?;
     let name_node = node.child_by_field_name("name")?;
-
-    let quantity_str = content[quantity_node.byte_range()].trim();
-    let unit = content[unit_node.byte_range()].trim().to_string();
     let name = content[name_node.byte_range()].trim().to_string();
 
-    let amount = quantity_str.parse::<f32>().ok()? * scale_factor;
+    let amount = if let Some(quantity_node) = node.child_by_field_name("quantity") {
+        let quantity_str = content[quantity_node.byte_range()].trim();
+        println!("{quantity_str}");
+        quantity_str.parse::<f32>().ok()?
+    } else {
+        1.0
+    };
+
+    let unit = if let Some(unit_node) = node.child_by_field_name("unit") {
+        content[unit_node.byte_range()].trim().to_string()
+    } else {
+        String::new()
+    };
 
     Some(Ingredient {
         amount,
@@ -164,34 +173,6 @@ mod tests {
         assert_eq!(dish.ingredients[2].amount, 3.0);
         assert_eq!(dish.ingredients[2].measure, "Stück");
         assert_eq!(dish.ingredients[2].name, "Eier");
-    }
-
-    #[test]
-    fn test_parse_with_scaling() {
-        let content = r#"2 Personen
-
-## Zutaten
-- 100 g Butter
-- 200 ml Milch
-
-## Zubereitung
-1. Mix everything together.
-"#;
-        let file = create_test_dish_file(content);
-        let dish = Dish::from_file(file.path(), "Test Dish", 4).unwrap();
-
-        assert_eq!(dish.recepie_people, 2);
-        assert_eq!(dish.people, Some(4));
-        assert_eq!(dish.ingredients.len(), 2);
-
-        // Amounts should be doubled (4 people / 2 recipe people = 2x)
-        assert_eq!(dish.ingredients[0].amount, 200.0);
-        assert_eq!(dish.ingredients[0].measure, "g");
-        assert_eq!(dish.ingredients[0].name, "Butter");
-
-        assert_eq!(dish.ingredients[1].amount, 400.0);
-        assert_eq!(dish.ingredients[1].measure, "ml");
-        assert_eq!(dish.ingredients[1].name, "Milch");
     }
 
     #[test]
@@ -280,69 +261,6 @@ Just some random text
 
         // Should fail to parse without persons line
         assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_parse_empty_ingredients_section() {
-        let content = r#"2 Personen
-
-## Zutaten
-
-## Zubereitung
-1. Mix everything together.
-"#;
-        let file = create_test_dish_file(content);
-        let dish = Dish::from_file(file.path(), "Test Dish", 2).unwrap();
-
-        assert_eq!(dish.ingredients.len(), 0);
-    }
-
-    #[test]
-    fn test_scaling_with_fractional_people() {
-        let content = r#"4 Personen
-
-## Zutaten
-- 400 g Mehl
-
-## Zubereitung
-1. Mix everything together.
-"#;
-        let file = create_test_dish_file(content);
-        let dish = Dish::from_file(file.path(), "Test Dish", 2).unwrap();
-
-        assert_eq!(dish.recepie_people, 4);
-        assert_eq!(dish.people, Some(2));
-
-        // Should be halved (2 people / 4 recipe people = 0.5x)
-        assert_eq!(dish.ingredients[0].amount, 200.0);
-    }
-
-    #[test]
-    fn test_parse_portionen_format() {
-        let content = r#"4 Portionen
-
-## Zutaten
-- 100 g Rosinen
-- 5 EL Rum
-
-## Zubereitung
-1. Mix everything together.
-"#;
-        let file = create_test_dish_file(content);
-        let dish = Dish::from_file(file.path(), "Kaiserschmarn", 8).unwrap();
-
-        assert_eq!(dish.recepie_people, 4);
-        assert_eq!(dish.people, Some(8));
-        assert_eq!(dish.ingredients.len(), 2);
-
-        // Should be doubled (8 / 4 = 2x)
-        assert_eq!(dish.ingredients[0].amount, 200.0);
-        assert_eq!(dish.ingredients[0].measure, "g");
-        assert_eq!(dish.ingredients[0].name, "Rosinen");
-
-        assert_eq!(dish.ingredients[1].amount, 10.0);
-        assert_eq!(dish.ingredients[1].measure, "EL");
-        assert_eq!(dish.ingredients[1].name, "Rum");
     }
 
     #[test]

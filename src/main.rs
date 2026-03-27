@@ -22,9 +22,9 @@ fn main() {
 
     let simple = shopping_list.as_md_list();
     fs::write("./shopping-list.md", &simple).expect("Failed to write shopping-list.md");
-    let clustered = shopping_list.as_clustered_md_list();
-    fs::write("./shopping-list-clustered.md", &clustered)
-        .expect("Failed to write shopping-list-clustered.md");
+    // let clustered = shopping_list.as_clustered_md_list();
+    // fs::write("./shopping-list-clustered.md", &clustered)
+    //     .expect("Failed to write shopping-list-clustered.md");
 
     println!("Shopping lists generated successfully!");
 }
