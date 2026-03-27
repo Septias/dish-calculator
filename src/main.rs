@@ -18,7 +18,7 @@ fn main() {
     let Cli { plan, dish_root } = Cli::parse();
 
     let cookbook = CookBook::from_file(&dish_root);
-    let shopping_list = WeekPlan::from_file(&plan, &cookbook).shopping_list();
+    let mut shopping_list = WeekPlan::from_file(&plan, &cookbook).shopping_list();
 
     let simple = shopping_list.as_md_list();
     fs::write("./shopping-list.md", &simple).expect("Failed to write shopping-list.md");

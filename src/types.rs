@@ -52,11 +52,10 @@ impl IngredientList {
     }
 
     /// Generate md shopping list.
-    pub(crate) fn as_md_list(&self) -> String {
-        let mut accumulated = self.clone();
-        accumulated.accumulate();
+    pub(crate) fn as_md_list(&mut self) -> String {
+        self.accumulate();
 
-        let mut items: Vec<String> = accumulated
+        let mut items: Vec<String> = self
             .0
             .iter()
             .map(|ingredient| {
@@ -78,7 +77,7 @@ impl IngredientList {
     }
 
     /// Generate clustered md shopping list with AI.
-    pub(crate) fn as_clustered_md_list(&self) -> String {
+    pub(crate) fn as_clustered_md_list(&mut self) -> String {
         // For now, just use the same implementation as as_md_list
         self.as_md_list()
     }
