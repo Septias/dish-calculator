@@ -41,45 +41,45 @@ Ich serviere dieses Chili mit geröstetem Brot. Hierzu schneide ich einige Brots
     count: (integer))
   (ingredients_section
     (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
       name: (text)))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
   (preparation_section
     (text)
     (text)

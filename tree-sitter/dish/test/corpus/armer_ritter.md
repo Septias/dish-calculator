@@ -22,17 +22,17 @@ Inzwischen die Butter in einer Pfanne auslassen. Die Brotscheiben in der Butter 
   (preamble_line)
   (ingredients_section
     (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
       name: (text)))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
   (preparation_section
     (text)
     (text)))

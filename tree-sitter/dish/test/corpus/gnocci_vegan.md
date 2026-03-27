@@ -32,27 +32,27 @@ Nun die Tomaten, Schafskäse und Kräuter hinzufügen. Alles gut umrühren, dami
     count: (integer))
   (ingredients_section
     (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
+      name: (text))
+    (ingredient_line
       name: (text)))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
-  (ingredient_line
-    name: (text))
   (preparation_section
     (text)
     (text)

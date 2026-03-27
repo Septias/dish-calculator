@@ -5,7 +5,7 @@
     "fields": {
       "name": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "text",
@@ -33,6 +33,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "preamble_line",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -109,10 +119,6 @@
       "multiple": true,
       "required": true,
       "types": [
-        {
-          "type": "ingredient_line",
-          "named": true
-        },
         {
           "type": "ingredients_section",
           "named": true

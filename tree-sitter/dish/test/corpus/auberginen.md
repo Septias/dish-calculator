@@ -24,19 +24,19 @@ Auberginen Recipe
     (integer))
   (ingredients_section
     (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
       (text)))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
   (preparation_section
     (text)
     (text)))

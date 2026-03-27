@@ -33,33 +33,33 @@ Dieses traditionelle Rezept stammt aus einem Tiroler Landgasthof und wird dort s
   (preamble_line)
   (ingredients_section
     (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
+      (text))
+    (ingredient_line
       (text)))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
-  (ingredient_line
-    (text))
   (preparation_section
     (text)
     (text)))
