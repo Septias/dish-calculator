@@ -19,10 +19,19 @@ Simple 2
     (integer))
   (ingredients_section
     (ingredient_line
+      (quantity
+        (integer))
+      (unit)
       (text))
     (ingredient_line
+      (quantity
+        (integer))
+      (unit)
       (text))
     (ingredient_line
+      (quantity
+        (integer))
+      (unit)
       (text)))
   (preparation_section
     (text)))

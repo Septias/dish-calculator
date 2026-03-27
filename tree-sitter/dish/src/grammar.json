@@ -84,99 +84,83 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "PREC",
-          "value": 4,
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "-"
-              },
-              {
-                "type": "FIELD",
-                "name": "quantity",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "quantity"
-                }
-              },
-              {
-                "type": "FIELD",
-                "name": "unit",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "unit"
-                }
-              },
-              {
-                "type": "FIELD",
-                "name": "name",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "text"
-                }
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
+              "type": "FIELD",
+              "name": "quantity",
+              "content": {
+                "type": "SYMBOL",
+                "name": "quantity"
               }
-            ]
-          }
+            },
+            {
+              "type": "FIELD",
+              "name": "unit",
+              "content": {
+                "type": "SYMBOL",
+                "name": "unit"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "text"
+              }
+            }
+          ]
         },
         {
-          "type": "PREC",
-          "value": 3,
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "-"
-              },
-              {
-                "type": "FIELD",
-                "name": "quantity",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "quantity"
-                }
-              },
-              {
-                "type": "FIELD",
-                "name": "name",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "text"
-                }
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
+              "type": "FIELD",
+              "name": "quantity",
+              "content": {
+                "type": "SYMBOL",
+                "name": "quantity"
               }
-            ]
-          }
+            },
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "text"
+              }
+            }
+          ]
         },
         {
-          "type": "PREC",
-          "value": 2,
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "-"
-              },
-              {
-                "type": "FIELD",
-                "name": "name",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "text"
-                }
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "text"
               }
-            ]
-          }
+            }
+          ]
         },
         {
-          "type": "PREC",
-          "value": 1,
-          "content": {
-            "type": "SYMBOL",
-            "name": "preamble_line"
-          }
+          "type": "SYMBOL",
+          "name": "preamble_line"
         }
       ]
     },
@@ -210,16 +194,37 @@
       ]
     },
     "integer": {
-      "type": "PATTERN",
-      "value": "\\d+"
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "\\d+"
+        }
+      }
     },
     "float": {
-      "type": "PATTERN",
-      "value": "\\d+\\.\\d+"
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "\\d+\\.\\d+"
+        }
+      }
     },
     "unit": {
-      "type": "PATTERN",
-      "value": "[^\\s]+"
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 3,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\\s]+"
+        }
+      }
     },
     "text": {
       "type": "PATTERN",

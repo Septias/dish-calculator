@@ -35,26 +35,51 @@ Risotto vom Herd nehmen, Spinat (bis auf ein paar Blätter) und geriebenen Käse
   (preamble_line)
   (ingredients_section
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
+      name: (text))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
       name: (text))
     (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
-      name: (text))
-    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text)))
   (preparation_section
     (text)

@@ -26,24 +26,49 @@ Kaiserschmarn with Portionen format
     count: (integer))
   (ingredients_section
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
-      name: (text))
-    (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text)))
   (preparation_section
     (text)))

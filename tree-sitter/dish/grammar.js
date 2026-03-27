@@ -23,19 +23,19 @@ module.exports = grammar({
 
     ingredient_line: $ =>
       choice(
-        prec(4, seq("-", field("quantity", $.quantity), field("unit", $.unit), field("name", $.text))),
-        prec(3, seq("-", field("quantity", $.quantity), field("name", $.text))),
-        prec(2, seq("-", field("name", $.text))),
-        prec(1,$.preamble_line),
+         seq("-", field("quantity", $.quantity), field("unit", $.unit), field("name", $.text)),
+         seq("-", field("quantity", $.quantity), field("name", $.text)),
+         seq("-", field("name", $.text)),
+         $.preamble_line,
       ),
 
     preparation_section: $ => seq("## Zubereitung", repeat($.text)),
 
     // Tokens
     quantity: $ => choice($.float, $.integer),
-    integer: _ => /\d+/,
-    float: _ => /\d+\.\d+/,
-    unit: _ => /[^\s]+/,
+    integer: _ => token(prec(2,/\d+/)),
+    float: _ => token(prec(2,/\d+\.\d+/)),
+    unit: _ => token(prec(3,/[^\s]+/)),
     text: _ => /[^\n\r]+/,
     preamble_line: _ => /[^#\-\n\r][^\n\r]*/,
   }

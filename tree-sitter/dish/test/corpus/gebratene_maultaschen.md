@@ -20,18 +20,39 @@ https://eat.de/rezept/gebratene-maultaschen-ei/
     count: (integer))
   (ingredients_section
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
+      quantity: (quantity
+        (integer))
+      unit: (unit)
       name: (text))
     (ingredient_line
       (preamble_line))))
