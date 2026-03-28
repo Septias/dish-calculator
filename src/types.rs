@@ -99,3 +99,131 @@ impl Clone for IngredientList {
         Self(self.0.clone())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_accumulate_same_ingredient_same_measure() {
+        let mut list = IngredientList::from(vec![
+            Ingredient {
+                amount: 100.0,
+                measure: "g".to_string(),
+                name: "flour".to_string(),
+                dish: "Dish A".to_string(),
+            },
+            Ingredient {
+                amount: 200.0,
+                measure: "g".to_string(),
+                name: "flour".to_string(),
+                dish: "Dish B".to_string(),
+            },
+            Ingredient {
+                amount: 50.0,
+                measure: "g".to_string(),
+                name: "flour".to_string(),
+                dish: "Dish C".to_string(),
+            },
+        ]);
+
+        list.accumulate();
+
+        assert_eq!(list.0.len(), 1);
+        assert_eq!(list.0[0].amount, 350.0);
+        assert_eq!(list.0[0].measure, "g");
+        assert_eq!(list.0[0].name, "flour");
+        assert!(list.0[0].dish.contains("Dish A"));
+        assert!(list.0[0].dish.contains("Dish B"));
+        assert!(list.0[0].dish.contains("Dish C"));
+    }
+
+    #[test]
+    fn test_accumulate_different_measures_kept_separate() {
+        let mut list = IngredientList::from(vec![
+            Ingredient {
+                amount: 2.0,
+                measure: "cups".to_string(),
+                name: "sugar".to_string(),
+                dish: "Dish A".to_string(),
+            },
+            Ingredient {
+                amount: 100.0,
+                measure: "g".to_string(),
+                name: "sugar".to_string(),
+                dish: "Dish B".to_string(),
+            },
+            Ingredient {
+                amount: 1.0,
+                measure: "cups".to_string(),
+                name: "sugar".to_string(),
+                dish: "Dish C".to_string(),
+            },
+        ]);
+
+        list.accumulate();
+
+        assert_eq!(list.0.len(), 2);
+
+        let cups_ingredient = list.0.iter().find(|i| i.measure == "cups").unwrap();
+        assert_eq!(cups_ingredient.amount, 3.0);
+        assert_eq!(cups_ingredient.name, "sugar");
+        assert!(cups_ingredient.dish.contains("Dish A"));
+        assert!(cups_ingredient.dish.contains("Dish C"));
+
+        let grams_ingredient = list.0.iter().find(|i| i.measure == "g").unwrap();
+        assert_eq!(grams_ingredient.amount, 100.0);
+        assert_eq!(grams_ingredient.name, "sugar");
+        assert!(grams_ingredient.dish.contains("Dish B"));
+    }
+
+    #[test]
+    fn test_accumulate_different_ingredients_kept_separate() {
+        let mut list = IngredientList::from(vec![
+            Ingredient {
+                amount: 200.0,
+                measure: "g".to_string(),
+                name: "flour".to_string(),
+                dish: "Dish A".to_string(),
+            },
+            Ingredient {
+                amount: 150.0,
+                measure: "g".to_string(),
+                name: "sugar".to_string(),
+                dish: "Dish A".to_string(),
+            },
+            Ingredient {
+                amount: 100.0,
+                measure: "g".to_string(),
+                name: "butter".to_string(),
+                dish: "Dish B".to_string(),
+            },
+            Ingredient {
+                amount: 50.0,
+                measure: "g".to_string(),
+                name: "flour".to_string(),
+                dish: "Dish C".to_string(),
+            },
+        ]);
+
+        list.accumulate();
+
+        assert_eq!(list.0.len(), 3);
+
+        let flour = list.0.iter().find(|i| i.name == "flour").unwrap();
+        assert_eq!(flour.amount, 250.0);
+        assert_eq!(flour.measure, "g");
+        assert!(flour.dish.contains("Dish A"));
+        assert!(flour.dish.contains("Dish C"));
+
+        let sugar = list.0.iter().find(|i| i.name == "sugar").unwrap();
+        assert_eq!(sugar.amount, 150.0);
+        assert_eq!(sugar.measure, "g");
+        assert_eq!(sugar.dish, "Dish A");
+
+        let butter = list.0.iter().find(|i| i.name == "butter").unwrap();
+        assert_eq!(butter.amount, 100.0);
+        assert_eq!(butter.measure, "g");
+        assert_eq!(butter.dish, "Dish B");
+    }
+}
