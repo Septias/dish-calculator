@@ -381,4 +381,40 @@ Just some random text
         assert_eq!(items[1].measure, "ml");
         assert_eq!(items[1].name, "Milch");
     }
+
+    #[test]
+    fn test_parse_ingredients_with_defaults() {
+        let content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 2 Eggs
+- Salt
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Test Dish", 2).unwrap();
+
+        assert_eq!(dish.ingredients.len(), 3);
+
+        // First ingredient: has amount and measure
+        assert_eq!(dish.ingredients[0].amount, 100.0);
+        assert_eq!(dish.ingredients[0].measure, "g");
+        assert_eq!(dish.ingredients[0].name, "Butter");
+        assert_eq!(dish.ingredients[0].dish, "Test Dish");
+
+        // Second ingredient: has amount but no measure (defaults to empty string)
+        assert_eq!(dish.ingredients[1].amount, 2.0);
+        assert_eq!(dish.ingredients[1].measure, "");
+        assert_eq!(dish.ingredients[1].name, "Eggs");
+        assert_eq!(dish.ingredients[1].dish, "Test Dish");
+
+        // Third ingredient: no amount or measure (defaults to 1.0 and empty string)
+        assert_eq!(dish.ingredients[2].amount, 1.0);
+        assert_eq!(dish.ingredients[2].measure, "");
+        assert_eq!(dish.ingredients[2].name, "Salt");
+        assert_eq!(dish.ingredients[2].dish, "Test Dish");
+    }
 }
