@@ -15,6 +15,7 @@ pub(crate) trait Plan {
 pub(crate) struct Day {
     /// List of dishes.
     pub(crate) dishes: Vec<Dish>,
+    pub(crate) shopping_days: Vec<usize>,
 }
 
 impl Plan for Day {
@@ -51,6 +52,64 @@ pub(crate) struct WeekPlan {
     pub(crate) _start: chrono::NaiveDate,
     /// Consecutive list of days.
     pub(crate) days: Vec<Day>,
+}
+
+impl WeekPlan {
+    /// Generate multiple shopping lists based on shopping markers across all days.
+    /// Shopping lists span multiple days until a shopping marker is encountered.
+    pub(crate) fn shopping_lists(&self) -> Vec<IngredientList> {
+        // Flatten all dishes across all days and collect shopping marker positions
+        let mut all_dishes = Vec::new();
+        let mut marker_positions = Vec::new();
+        let mut current_position = 0;
+
+        for day in &self.days {
+            // Add all dishes from this day
+            all_dishes.extend(day.dishes.iter());
+
+            // Adjust shopping marker positions to account for all previous dishes
+            for &marker_idx in &day.shopping_days {
+                marker_positions.push(current_position + marker_idx);
+            }
+
+            current_position += day.dishes.len();
+        }
+
+        // If no markers, return one list with all dishes
+        if marker_positions.is_empty() {
+            let list: IngredientList = all_dishes
+                .iter()
+                .map(|dish| IngredientList::from(dish.shopping_list()))
+                .sum();
+            return vec![list];
+        }
+
+        // Generate shopping lists for dishes between consecutive markers
+        let mut lists = Vec::new();
+        let mut start_idx = 0;
+
+        for &marker_idx in &marker_positions {
+            if marker_idx > start_idx {
+                let list: IngredientList = all_dishes[start_idx..marker_idx]
+                    .iter()
+                    .map(|dish| IngredientList::from(dish.shopping_list()))
+                    .sum();
+                lists.push(list);
+            }
+            start_idx = marker_idx;
+        }
+
+        // Add remaining dishes after the last marker
+        if start_idx < all_dishes.len() {
+            let list: IngredientList = all_dishes[start_idx..]
+                .iter()
+                .map(|dish| IngredientList::from(dish.shopping_list()))
+                .sum();
+            lists.push(list);
+        }
+
+        lists
+    }
 }
 
 impl Plan for WeekPlan {
@@ -131,6 +190,7 @@ fn parse_day_line(
 ) -> Day {
     let mut day_people = None;
     let mut dishes = Vec::new();
+    let mut shopping_days = Vec::new();
 
     let mut cursor = node.walk();
 
@@ -151,6 +211,7 @@ fn parse_day_line(
                     content,
                     cookbook,
                     &mut dishes,
+                    &mut shopping_days,
                     default_people,
                     day_people,
                 );
@@ -159,7 +220,10 @@ fn parse_day_line(
         }
     }
 
-    Day { dishes }
+    Day {
+        dishes,
+        shopping_days,
+    }
 }
 
 fn parse_menu(
@@ -167,6 +231,7 @@ fn parse_menu(
     content: &str,
     cookbook: &CookBook,
     dishes: &mut Vec<Dish>,
+    shopping_days: &mut Vec<usize>,
     default_people: usize,
     day_people: Option<usize>,
 ) {
@@ -192,6 +257,7 @@ fn parse_menu(
                             content,
                             cookbook,
                             dishes,
+                            shopping_days,
                             default_people,
                             day_people,
                         );
@@ -208,6 +274,8 @@ fn parse_menu_item(
     content: &str,
     cookbook: &CookBook,
     dishes: &mut Vec<Dish>,
+    shopping_days: &mut Vec<usize>,
+
     default_people: usize,
     day_people: Option<usize>,
 ) {
@@ -228,7 +296,7 @@ fn parse_menu_item(
 
                     // Strip the [[ and ]] brackets to get the dish name
                     if dish_text.starts_with("[[") && dish_text.ends_with("]]") {
-                        let dish_name = &dish_text[2..dish_text.len()-2];
+                        let dish_name = &dish_text[2..dish_text.len() - 2];
                         eprintln!("            Dish name: {}", dish_name);
 
                         // Extract multiplier if present
@@ -269,8 +337,7 @@ fn parse_menu_item(
                 }
             }
             "shopping_marker" => {
-                eprintln!("            Found shopping marker");
-                // TODO: Handle shopping markers in the future
+                shopping_days.push(dishes.len());
             }
             _ => {}
         }
@@ -309,9 +376,7 @@ mod tests {
             make_ingredient(200.0, "ml", "Milch", "Dish1"),
         ]);
 
-        let list2 = IngredientList::from(vec![
-            make_ingredient(50.0, "g", "Zucker", "Dish2"),
-        ]);
+        let list2 = IngredientList::from(vec![make_ingredient(50.0, "g", "Zucker", "Dish2")]);
 
         let combined = list1 + list2;
         assert_eq!(combined.0.len(), 3);
@@ -320,15 +385,9 @@ mod tests {
     #[test]
     fn test_ingredient_list_sum() {
         let lists = vec![
-            IngredientList::from(vec![
-                make_ingredient(100.0, "g", "Butter", "Dish1"),
-            ]),
-            IngredientList::from(vec![
-                make_ingredient(200.0, "ml", "Milch", "Dish2"),
-            ]),
-            IngredientList::from(vec![
-                make_ingredient(50.0, "g", "Zucker", "Dish3"),
-            ]),
+            IngredientList::from(vec![make_ingredient(100.0, "g", "Butter", "Dish1")]),
+            IngredientList::from(vec![make_ingredient(200.0, "ml", "Milch", "Dish2")]),
+            IngredientList::from(vec![make_ingredient(50.0, "g", "Zucker", "Dish3")]),
         ];
 
         let total: IngredientList = lists.into_iter().sum();
@@ -358,6 +417,7 @@ mod tests {
 
         let day = Day {
             dishes: vec![dish],
+            shopping_days: vec![],
         };
 
         let shopping_list = day.shopping_list();
@@ -396,6 +456,7 @@ mod tests {
 
         let day = Day {
             dishes: vec![dish1, dish2],
+            shopping_days: vec![],
         };
 
         let shopping_list = day.shopping_list();
@@ -404,7 +465,10 @@ mod tests {
 
     #[test]
     fn test_day_shopping_list_empty() {
-        let day = Day { dishes: vec![] };
+        let day = Day {
+            dishes: vec![],
+            shopping_days: vec![],
+        };
         let shopping_list = day.shopping_list();
         assert_eq!(shopping_list.0.len(), 0);
     }
@@ -425,9 +489,11 @@ mod tests {
 
         let day1 = Day {
             dishes: vec![dish1],
+            shopping_days: vec![],
         };
         let day2 = Day {
             dishes: vec![dish2],
+            shopping_days: vec![],
         };
 
         let weekplan = WeekPlan {
@@ -618,5 +684,87 @@ Montag: [[Dish1]](4)
         // Should be scaled to 4 people (dish count override)
         let ingredients = weekplan.days[0].dishes[0].shopping_list();
         assert_eq!(ingredients[0].amount, 200.0); // 100g * 2
+    }
+
+    #[test]
+    fn test_weekplan_shopping_lists_spans_multiple_days() {
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file1 = create_test_dish_file(dish_content);
+        let file2 = create_test_dish_file(dish_content);
+        let file3 = create_test_dish_file(dish_content);
+        let file4 = create_test_dish_file(dish_content);
+
+        let dish1 = Dish::from_file(file1.path(), "Dish1", 2).unwrap();
+        let dish2 = Dish::from_file(file2.path(), "Dish2", 2).unwrap();
+        let dish3 = Dish::from_file(file3.path(), "Dish3", 2).unwrap();
+        let dish4 = Dish::from_file(file4.path(), "Dish4", 2).unwrap();
+
+        // Day 1: Dish1, Dish2
+        // Day 2: Dish3, Shopping Marker, Dish4
+        let day1 = Day {
+            dishes: vec![dish1, dish2],
+            shopping_days: vec![],
+        };
+        let day2 = Day {
+            dishes: vec![dish3, dish4],
+            shopping_days: vec![1], // Marker after Dish3
+        };
+
+        let weekplan = WeekPlan {
+            _start: chrono::NaiveDate::from_ymd_opt(2026, 1, 1).unwrap(),
+            days: vec![day1, day2],
+        };
+
+        let lists = weekplan.shopping_lists();
+        assert_eq!(lists.len(), 2);
+
+        // First list should contain Dish1, Dish2, Dish3 (spans day 1 and part of day 2)
+        assert_eq!(lists[0].0.len(), 3);
+
+        // Second list should contain Dish4 (after the marker)
+        assert_eq!(lists[1].0.len(), 1);
+    }
+
+    #[test]
+    fn test_weekplan_shopping_lists_no_markers() {
+        let dish_content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file1 = create_test_dish_file(dish_content);
+        let file2 = create_test_dish_file(dish_content);
+
+        let dish1 = Dish::from_file(file1.path(), "Dish1", 2).unwrap();
+        let dish2 = Dish::from_file(file2.path(), "Dish2", 2).unwrap();
+
+        let day1 = Day {
+            dishes: vec![dish1],
+            shopping_days: vec![],
+        };
+        let day2 = Day {
+            dishes: vec![dish2],
+            shopping_days: vec![],
+        };
+
+        let weekplan = WeekPlan {
+            _start: chrono::NaiveDate::from_ymd_opt(2026, 1, 1).unwrap(),
+            days: vec![day1, day2],
+        };
+
+        let lists = weekplan.shopping_lists();
+        assert_eq!(lists.len(), 1);
+        // All dishes in one list
+        assert_eq!(lists[0].0.len(), 2);
     }
 }

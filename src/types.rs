@@ -66,7 +66,7 @@ impl IngredientList {
                 };
 
                 format!(
-                    "- {}: {} ({})",
+                    "- [ ] {}: {} ({})",
                     ingredient.name, amount_str, ingredient.dish
                 )
             })

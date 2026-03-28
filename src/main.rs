@@ -8,7 +8,6 @@ mod types;
 
 use clap::Parser;
 use cli::Cli;
-use error::DishPlanError;
 use plan::Plan;
 use std::fs;
 
@@ -18,13 +17,18 @@ fn main() {
     let Cli { plan, dish_root } = Cli::parse();
 
     let cookbook = CookBook::from_file(&dish_root);
-    let mut shopping_list = WeekPlan::from_file(&plan, &cookbook).shopping_list();
+    let shopping_lists = WeekPlan::from_file(&plan, &cookbook).shopping_lists();
 
-    let simple = shopping_list.as_md_list();
-    fs::write("./shopping-list.md", &simple).expect("Failed to write shopping-list.md");
-    // let clustered = shopping_list.as_clustered_md_list();
-    // fs::write("./shopping-list-clustered.md", &clustered)
-    //     .expect("Failed to write shopping-list-clustered.md");
+    // Generate concatenated markdown with numbered sections
+    let mut output = String::new();
+    for (i, mut list) in shopping_lists.into_iter().enumerate() {
+        let section_number = i + 1;
+        output.push_str(&format!("## Einkauf {}\n\n", section_number));
+        output.push_str(&list.as_md_list());
+        output.push_str("\n\n");
+    }
+
+    fs::write("./shopping-list.md", &output).expect("Failed to write shopping-list.md");
 
     println!("Shopping lists generated successfully!");
 }
