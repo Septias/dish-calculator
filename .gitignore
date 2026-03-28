@@ -3,3 +3,4 @@ target
 .direnv
 .aider*
 /test-data/Kochen
+/shopping-list.md
