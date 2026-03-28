@@ -104,7 +104,6 @@ fn parse_ingredients_section(
 
     for child in node.children(&mut cursor) {
         if child.kind() == "ingredient_line" {
-            println!("ingredient");
             if let Some(ingredient) = parse_ingredient_node(&child, content, dish_name) {
                 ingredients.push(ingredient);
             }
@@ -122,7 +121,6 @@ fn parse_ingredient_node(
 
     let amount = if let Some(quantity_node) = node.child_by_field_name("quantity") {
         let quantity_str = content[quantity_node.byte_range()].trim();
-        println!("{quantity_str}");
         quantity_str.parse::<f32>().ok()?
     } else {
         1.0
