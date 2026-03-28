@@ -52,6 +52,7 @@ impl Dish {
         let mut cursor = root.walk();
         let mut recipe_people = 1;
         let mut ingredients = Vec::new();
+        let mut preparation_text = String::new();
 
         for child in root.children(&mut cursor) {
             match child.kind() {
@@ -64,6 +65,11 @@ impl Dish {
                 "ingredients_section" => {
                     parse_ingredients_section(&child, &content, dish_name, &mut ingredients);
                 }
+                "preparation_section" => {
+                    // Extract the full text of the preparation section
+                    let section_text = content[child.byte_range()].trim();
+                    preparation_text = section_text.to_string();
+                }
                 _ => {}
             }
         }
@@ -72,7 +78,11 @@ impl Dish {
             people: Some(people),
             recepie_people: recipe_people,
             ingredients,
-            blocks: vec![],
+            blocks: if preparation_text.is_empty() {
+                vec![]
+            } else {
+                vec![preparation_text]
+            },
             path: path.to_path_buf(),
         })
     }
@@ -91,6 +101,36 @@ impl Dish {
                 dish: ing.dish.clone(),
             })
             .collect()
+    }
+
+    /// Generate markdown for the dish with scaled quantities.
+    pub(crate) fn as_markdown(&self, dish_name: &str) -> String {
+        let target_people = self.people.unwrap_or(self.recepie_people);
+        let scaled_ingredients = self.shopping_list();
+
+        let mut output = String::new();
+        output.push_str(&format!("## {} ({} Personen)\n\n", dish_name, target_people));
+        output.push_str("### Zutaten\n");
+
+        for ingredient in scaled_ingredients {
+            let amount_str = if ingredient.measure.is_empty() {
+                format!("{:.1}", ingredient.amount)
+            } else {
+                format!("{:.1} {}", ingredient.amount, ingredient.measure)
+            };
+            output.push_str(&format!("- {} {}\n", amount_str, ingredient.name));
+        }
+
+        // Add preparation section if it exists
+        if !self.blocks.is_empty() {
+            output.push('\n');
+            for block in &self.blocks {
+                output.push_str(block);
+                output.push('\n');
+            }
+        }
+
+        output
     }
 }
 
@@ -416,5 +456,54 @@ Just some random text
         assert_eq!(dish.ingredients[2].measure, "");
         assert_eq!(dish.ingredients[2].name, "Salt");
         assert_eq!(dish.ingredients[2].dish, "Test Dish");
+    }
+
+    #[test]
+    fn test_as_markdown_with_scaling() {
+        let content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 200 ml Milch
+- 3 Stück Eier
+
+## Zubereitung
+1. Mix everything together.
+2. Bake for 30 minutes.
+"#;
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Test Dish", 4).unwrap();
+
+        let markdown = dish.as_markdown("Test Dish");
+
+        assert!(markdown.contains("## Test Dish (4 Personen)"));
+        assert!(markdown.contains("### Zutaten"));
+        assert!(markdown.contains("- 200.0 g Butter"));
+        assert!(markdown.contains("- 400.0 ml Milch"));
+        assert!(markdown.contains("- 6.0 Stück Eier"));
+        assert!(markdown.contains("## Zubereitung"));
+        assert!(markdown.contains("1. Mix everything together."));
+        assert!(markdown.contains("2. Bake for 30 minutes."));
+    }
+
+    #[test]
+    fn test_as_markdown_no_scaling() {
+        let content = r#"2 Personen
+
+## Zutaten
+- 100 g Butter
+- 2 Eggs
+
+## Zubereitung
+1. Mix everything together.
+"#;
+        let file = create_test_dish_file(content);
+        let dish = Dish::from_file(file.path(), "Simple Dish", 2).unwrap();
+
+        let markdown = dish.as_markdown("Simple Dish");
+
+        assert!(markdown.contains("## Simple Dish (2 Personen)"));
+        assert!(markdown.contains("- 100.0 g Butter"));
+        assert!(markdown.contains("- 2.0 Eggs"));
     }
 }
