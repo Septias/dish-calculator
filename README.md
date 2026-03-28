@@ -4,8 +4,14 @@ Berechne, Skaliere und Addiere die Zutaten für einen Essensplan, um den Einkauf
 
 ## Features
 
-- [] Skalieren
-- [] Akkumulieren
+- [x] Skalieren
+- [x] Akkumulieren
+- [] Generate Shopping List
+  - [] Split by Einkauf
+- [] Generate Clustered Shopping List
 - [] PDF-Export
+  - [] Shopping list
+  - [] Scaled Recepies
 - [] Vegane Optionen
 - [] Vereinfachen von Einheiten
+- [] Nutri Score
