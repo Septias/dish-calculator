@@ -7,7 +7,7 @@ Hotdogs
 ## Zutaten
 - 25 Stück Hotdog Brot
 - 25 Stück Würstchenalternative
-- 2,5 Packungen Röstzwiebeln
+- 2.5 Packungen Röstzwiebeln
 - 1 großes Glas	Essiggurken 
 - 2 flaschen	Ketchup
 - 1 flasche	Majo
@@ -22,34 +22,31 @@ Hotdogs
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (float))
+      unit: (unit)
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
-      unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
-      unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
-      unit: (unit)
-      name: (text))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (text))))
+      name: (ingredient_name))))

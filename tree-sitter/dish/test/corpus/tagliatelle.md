@@ -37,43 +37,47 @@ Tagliatelle
     (ingredient_line
       quantity: (quantity
         (integer))
-      unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
+    (ingredient_line
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (text)))
+      name: (ingredient_name)))
   (preparation_section
     (text)
     (text)

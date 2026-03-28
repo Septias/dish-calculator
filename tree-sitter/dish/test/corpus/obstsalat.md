@@ -22,32 +22,29 @@ Obstsalat
     (ingredient_line
       quantity: (quantity
         (integer))
-      unit: (unit)
-      name: (text))
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      name: (ingredient_name))
+    (ingredient_line
+      quantity: (quantity
+        (integer))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (text))
-    (ingredient_line
-      quantity: (quantity
-        (integer))
-      unit: (unit)
-      name: (text))
-    (ingredient_line
-      name: (text))))
+      name: (ingredient_name))))

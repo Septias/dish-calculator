@@ -27,37 +27,37 @@ Auberginen Recipe
       (quantity
         (integer))
       (unit)
-      (text))
+      (ingredient_name))
     (ingredient_line
       (quantity
         (integer))
       (unit)
-      (text))
+      (ingredient_name))
     (ingredient_line
       (quantity
         (integer))
       (unit)
-      (text))
+      (ingredient_name))
     (ingredient_line
       (quantity
         (float))
       (unit)
-      (text))
+      (ingredient_name))
     (ingredient_line
       (quantity
         (integer))
       (unit)
-      (text))
+      (ingredient_name))
     (ingredient_line
       (quantity
         (integer))
       (unit)
-      (text))
+      (ingredient_name))
     (ingredient_line
       (quantity
         (integer))
       (unit)
-      (text)))
+      (ingredient_name)))
   (preparation_section
     (text)
     (text)))

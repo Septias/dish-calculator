@@ -21,24 +21,24 @@ Kaesespaetzle
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))
+      name: (ingredient_name))
     (ingredient_line
       quantity: (quantity
         (integer))
       unit: (unit)
-      name: (text))))
+      name: (ingredient_name))))

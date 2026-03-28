@@ -8,7 +8,7 @@
         "required": false,
         "types": [
           {
-            "type": "text",
+            "type": "ingredient_name",
             "named": true
           }
         ]
@@ -160,6 +160,10 @@
   },
   {
     "type": "float",
+    "named": true
+  },
+  {
+    "type": "ingredient_name",
     "named": true
   },
   {

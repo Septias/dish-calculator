@@ -80,6 +80,22 @@
         }
       ]
     },
+    "preparation_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "## Zubereitung"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "text"
+          }
+        }
+      ]
+    },
     "ingredient_line": {
       "type": "CHOICE",
       "members": [
@@ -111,7 +127,7 @@
               "name": "name",
               "content": {
                 "type": "SYMBOL",
-                "name": "text"
+                "name": "ingredient_name"
               }
             }
           ]
@@ -136,7 +152,7 @@
               "name": "name",
               "content": {
                 "type": "SYMBOL",
-                "name": "text"
+                "name": "ingredient_name"
               }
             }
           ]
@@ -153,7 +169,7 @@
               "name": "name",
               "content": {
                 "type": "SYMBOL",
-                "name": "text"
+                "name": "ingredient_name"
               }
             }
           ]
@@ -161,22 +177,6 @@
         {
           "type": "SYMBOL",
           "name": "preamble_line"
-        }
-      ]
-    },
-    "preparation_section": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "## Zubereitung"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "text"
-          }
         }
       ]
     },
@@ -211,7 +211,7 @@
         "value": 2,
         "content": {
           "type": "PATTERN",
-          "value": "\\d+\\.\\d+"
+          "value": "\\d+[\\.,]\\d+"
         }
       }
     },
@@ -221,14 +221,99 @@
         "type": "PREC",
         "value": 3,
         "content": {
-          "type": "PATTERN",
-          "value": "[^\\s]+"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "Dosen"
+            },
+            {
+              "type": "STRING",
+              "value": "Dose"
+            },
+            {
+              "type": "STRING",
+              "value": "g"
+            },
+            {
+              "type": "STRING",
+              "value": "mg"
+            },
+            {
+              "type": "STRING",
+              "value": "kg"
+            },
+            {
+              "type": "STRING",
+              "value": "el"
+            },
+            {
+              "type": "STRING",
+              "value": "tl"
+            },
+            {
+              "type": "STRING",
+              "value": "l"
+            },
+            {
+              "type": "STRING",
+              "value": "ml"
+            },
+            {
+              "type": "STRING",
+              "value": "Liter"
+            },
+            {
+              "type": "STRING",
+              "value": "stk"
+            },
+            {
+              "type": "STRING",
+              "value": "Scheiben"
+            },
+            {
+              "type": "STRING",
+              "value": "scheiben"
+            },
+            {
+              "type": "STRING",
+              "value": "scheibe"
+            },
+            {
+              "type": "STRING",
+              "value": "Pr."
+            },
+            {
+              "type": "STRING",
+              "value": "EL"
+            },
+            {
+              "type": "STRING",
+              "value": "TL"
+            },
+            {
+              "type": "STRING",
+              "value": "Stück"
+            },
+            {
+              "type": "STRING",
+              "value": "Packung"
+            },
+            {
+              "type": "STRING",
+              "value": "Packungen"
+            }
+          ]
         }
       }
     },
     "text": {
       "type": "PATTERN",
       "value": "[^\\n\\r]+"
+    },
+    "ingredient_name": {
+      "type": "PATTERN",
+      "value": "[^\\n\\r-]+"
     },
     "preamble_line": {
       "type": "PATTERN",
